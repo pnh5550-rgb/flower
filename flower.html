@@ -436,6 +436,7 @@
     const n=document.getElementById('b-note'); if(n)n.value='';
     updateSourceBtn();
     recalc();
+    renderDisposeForm();
   }
   function updateSourceBtn(){
     const btn=document.getElementById('b-sourcebtn'); if(!btn)return;
@@ -474,25 +475,22 @@
     wrap.innerHTML=lots.map(l=>{const rem=lotRemain(l);const sel=l.id===selBatchLot;
       return `<div class="pickcard${sel?' sel':''}" onclick="POLLEN.choosePickLot('${l.id}')"><div class="pl"><div class="pname"><span class="tagdot fresh">생화분</span>${esc(l.region)}</div><div class="psub">${esc(shortType(l.type))} · ${fmtDate(l.date)} 입고</div></div><div class="pr"><div class="prem">${num(rem)}<span>kg</span></div><div class="pchk">${sel?'✓ 선택됨':'선택 ›'}</div></div></div>`;}).join('');
   }
-  /* ---------- 폐기 등록 ---------- */
-  let dKind='fresh';
-  function dispLotOptions(){
-    const lots=freshLots().filter(l=>lotRemain(l)>0).sort((a,b)=>a.date>b.date?-1:(a.date<b.date?1:(a.region<b.region?-1:1)));
-    if(lots.length===0)return '<option value="">사용 가능한 생화분이 없어요</option>';
-    return lots.map(l=>`<option value="${l.id}">${esc(l.region)} · ${esc(shortType(l.type))} · ${fmtDate(l.date)} (잔량 ${num(lotRemain(l))}kg)</option>`).join('');
+  /* ---------- 폐기 등록 (투입 탭, 배치 선택 방식) ---------- */
+  let dKind='fresh', dispLot='';
+  function renderDisposeForm(){
+    dKind='fresh'; dispLot='';
+    const d=document.getElementById('disp-date'); if(d)d.value=todayISO();
+    const q=document.getElementById('disp-qty'); if(q)q.value='';
+    const n=document.getElementById('disp-note'); if(n)n.value='';
+    const seg=document.getElementById('disp-kind-seg'); if(seg)seg.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.k==='fresh'));
+    const sf=document.getElementById('disp-source-field'); if(sf)sf.style.display='block';
+    updateDispSourceBtn();
   }
-  function openDispose(){
-    if(!isAdmin){openLogin();return;}
-    dKind='fresh';
-    showSheet(`<h2>🗑 폐기 등록</h2>
-      <div class="seg" id="disp-kind-seg"><button class="on" data-k="fresh" onclick="POLLEN.dispKind('fresh')">🌼 생화분</button><button data-k="dry" onclick="POLLEN.dispKind('dry')">🍂 건조화분</button></div>
-      <div class="field" id="disp-source-field"><label>생화분 출처 (어느 입고에서?)</label><select id="disp-lot">${dispLotOptions()}</select></div>
-      <div class="field"><label>폐기일자</label><input type="date" id="disp-date" value="${todayISO()}"></div>
-      <div class="field"><label>폐기량 (kg)</label><input type="number" id="disp-qty" inputmode="decimal" placeholder="예: 20"></div>
-      <div class="field"><label>폐기 사유</label><select id="disp-reason" onchange="document.getElementById('disp-reason-custom').style.display=this.value==='custom'?'block':'none'"><option>변질·오염</option><option>유통기한 경과</option><option>사용 후 잔여</option><option value="custom">기타(직접 입력)</option></select><input id="disp-reason-custom" placeholder="사유 직접 입력" style="display:none;margin-top:7px;"></div>
-      <div class="field"><label>메모 (선택)</label><textarea id="disp-note" placeholder="폐기 관련 메모"></textarea></div>
-      <div class="err" id="disp-err"></div>
-      <div class="mbtns"><button class="cancel" onclick="POLLEN.closeSheet()">취소</button><button class="save" onclick="POLLEN.saveDispose()">폐기 기록</button></div>`);
+  function updateDispSourceBtn(){
+    const btn=document.getElementById('disp-sourcebtn'); if(!btn)return;
+    const lot=freshLots().find(l=>l.id===dispLot);
+    if(lot){btn.classList.add('picked');btn.innerHTML=`🌼 ${esc(lot.region)} · ${esc(shortType(lot.type))} · ${fmtDate(lot.date)} (잔량 ${num(lotRemain(lot))}kg) ›`;}
+    else{btn.classList.remove('picked');btn.textContent='출처를 선택하세요 ›';}
   }
   /* ---------- 모달 ---------- */
   function showSheet(h){document.getElementById('sheet').innerHTML='<div class="grip"></div>'+h;document.getElementById('overlay').classList.add('show');}
@@ -692,7 +690,7 @@
     openPicker(){openPicker(function(id){selBatchLot=id;updateSourceBtn();recalc();},'생화분 출처 선택');},
     pickerSearch(v){batchSearchTxt=v;renderPickerList();},
     choosePickLot(id){hideSheet();const cb=pickCb;pickCb=null;if(cb)cb(id);},
-    openDispose(){openDispose();},
+    openDispPicker(){openPicker(function(id){dispLot=id;updateDispSourceBtn();},'폐기할 생화분 출처 선택');},
     dispKind(k){dKind=k;document.querySelectorAll('#disp-kind-seg button').forEach(b=>b.classList.toggle('on',b.dataset.k===k));document.getElementById('disp-source-field').style.display=k==='fresh'?'block':'none';},
     async saveDispose(){
       if(!isAdmin){openLogin();return;}
@@ -703,18 +701,17 @@
       const note=document.getElementById('disp-note').value.trim();
       if(!(qty>0)){err.textContent='폐기량을 올바르게 입력해 주세요.';err.classList.add('show');return;}
       if(dKind==='fresh'){
-        const dLot=document.getElementById('disp-lot').value;
-        const lot=freshLots().find(l=>l.id===dLot);
+        const lot=freshLots().find(l=>l.id===dispLot);
         if(!lot){err.textContent='폐기할 생화분 출처를 선택해 주세요.';err.classList.add('show');return;}
         if(qty>lotRemain(lot)){err.textContent=`잔량(${num(lotRemain(lot))}kg)보다 많이 폐기할 수 없어요.`;err.classList.add('show');return;}
-        state.disposals.push({id:uid('D'),date,kind:'fresh',freshLotId:dLot,qty,reason,note});
+        state.disposals.push({id:uid('D'),date,kind:'fresh',freshLotId:dispLot,qty,reason,note});
       }else{
         const d=dryTotals();
         if(d.inn>0&&qty>d.rem){err.textContent=`건조화분 잔량(${num(d.rem)}kg)보다 많이 폐기할 수 없어요.`;err.classList.add('show');return;}
         state.disposals.push({id:uid('D'),date,kind:'dry',qty,reason,note});
       }
       err.classList.remove('show');
-      await persist();hideSheet();render();toast(`폐기 기록 · ${dKind==='fresh'?'생화분':'건조화분'} ${num(qty)}kg`);
+      await persist();render();renderDisposeForm();toast(`폐기 기록 · ${dKind==='fresh'?'생화분':'건조화분'} ${num(qty)}kg`);this.tab('hist');
     },
     setMode(m){ui.ratioMode=m;document.querySelectorAll('#mode-seg button').forEach(b=>b.classList.toggle('on',b.dataset.m===m));document.getElementById('b-qtylabel').textContent=m==='fresh'?'꺼낸 생화분량 (kg)':'만들 총 배합량 (kg)';recalc();},
     onRatio(){document.getElementById('b-ratio-custom').style.display=document.getElementById('b-ratio').value==='custom'?'block':'none';recalc();},
@@ -848,11 +845,6 @@
           <div class="err" id="in-err"></div>
           <button class="submit" onclick="POLLEN.addLot()">입고 등록</button>
         </div>
-        <div class="formcard" id="dispose-card" style="margin-top:14px;">
-          <div class="section-h" style="margin-top:0;">폐기 처리</div>
-          <div class="hint">변질·오염되었거나 사용 후 남아 버리는 화분을 기록해요. 폐기하면 재고에서 차감되고 이력에 남습니다.</div>
-          <button class="submit ghost" onclick="POLLEN.openDispose()" style="margin-top:10px;">🗑 폐기 등록</button>
-        </div>
       </div>
 
       <div class="panel" id="panel-use">
@@ -870,6 +862,20 @@
           <div class="hint">⏳ 결과(생육상태)는 지금 입력하지 않아요. 먹이 투입 후 한 달쯤 지나 <b>이력 탭</b>에서 해당 건을 눌러 결과를 기록하세요.</div>
           <div class="err" id="b-err"></div>
           <button class="submit use" id="b-submit" onclick="POLLEN.addBatch()">투입 기록</button>
+        </div>
+
+        <div class="section-h" style="margin-top:18px;">🗑 폐기 처리</div>
+        <div class="formcard">
+          <div class="needlogin" style="display:none;">🔒 보기 전용이에요. 입력하려면 <button class="linklike" onclick="POLLEN.askLogin()">관리자 로그인</button>이 필요합니다.</div>
+          <div class="hint">변질·오염되었거나 사용 후 남아 버리는 화분을 기록해요. 폐기하면 재고에서 차감되고 이력에 남습니다.</div>
+          <div class="seg" id="disp-kind-seg" style="margin-top:10px;"><button class="on" data-k="fresh" onclick="POLLEN.dispKind('fresh')">🌼 생화분</button><button data-k="dry" onclick="POLLEN.dispKind('dry')">🍂 건조화분</button></div>
+          <div class="field" id="disp-source-field"><label>생화분 출처 <span class="reqmark">(눌러서 선택)</span></label><button type="button" class="sourcebtn" id="disp-sourcebtn" onclick="POLLEN.openDispPicker()">출처를 선택하세요 ›</button></div>
+          <div class="field"><label>폐기일자</label><input type="date" id="disp-date"></div>
+          <div class="field"><label>폐기량 (kg)</label><input type="number" id="disp-qty" inputmode="decimal" placeholder="예: 20"></div>
+          <div class="field"><label>폐기 사유</label><select id="disp-reason" onchange="document.getElementById('disp-reason-custom').style.display=this.value==='custom'?'block':'none'"><option>변질·오염</option><option>유통기한 경과</option><option>사용 후 잔여</option><option value="custom">기타(직접 입력)</option></select><input id="disp-reason-custom" placeholder="사유 직접 입력" style="display:none;margin-top:7px;"></div>
+          <div class="field"><label>메모 (선택)</label><textarea id="disp-note" placeholder="폐기 관련 메모"></textarea></div>
+          <div class="err" id="disp-err"></div>
+          <button class="submit ghost" id="disp-submit" onclick="POLLEN.saveDispose()">🗑 폐기 기록</button>
         </div>
       </div>
 
