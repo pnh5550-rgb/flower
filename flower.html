@@ -60,7 +60,10 @@
   .ministat .k{font-size:11px;color:var(--muted);font-weight:700;}
   .ministat .v{font-size:17px;font-weight:800;letter-spacing:-.4px;margin-top:2px;}
   .boxnote{text-align:center;font-size:11.5px;color:var(--muted);font-weight:700;margin-top:9px;}
-  .reqmark{font-size:11px;color:var(--honey-deep);font-weight:700;}
+  .seg.matseg{margin:8px 0 4px;}
+  .seg.matseg button[data-mv="dry"].on{background:#EBDFC4;border-color:#9A8246;color:#5E4E2A;}
+  .seg.matseg button[data-mv="fresh"].on{background:var(--honey-soft);border-color:var(--honey);color:var(--honey-deep);}
+  .seg.matseg button[data-mv="all"].on{background:var(--ink);border-color:var(--ink);color:#fff;}
   /* 투입 카드형 선택기 */
   .lotpick{margin-top:8px;max-height:300px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding:2px;}
   .pickcard{display:flex;align-items:center;gap:10px;background:var(--card);border:1.5px solid var(--line);border-radius:13px;padding:12px 13px;cursor:pointer;transition:.12s;}
@@ -97,8 +100,14 @@
 
   /* 재고 그룹 — 열 정렬 */
   .group{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);margin-bottom:11px;overflow:hidden;}
-  .group.dry{border-color:#ddc9a6;background:#FBF7EE;}
-  .group.dry .grem{color:#6E5A2E;}
+  .group.dry{border-color:#cdb887;background:#EADBBA;}
+  .group.dry .grem{color:#5E4A1E;}
+  .group.dry .lots{background:#E3D2AC;}
+  .group.depleted{opacity:.62;}
+  .group.depleted .grem{color:var(--muted);}
+  .lot.done .ldate,.lot.done .lnums,.lot.done .lnums b,.lot.done .lnums .rem b{color:#a99c87;}
+  .lot.done .lstat{background:#ece4d6;color:#a99c87;}
+  .lot.done .bar i{background:#cdbfa6;}
   #kind-seg button[data-k="dry"].on{background:#EFE6CF;border-color:#9A8246;color:#5E4E2A;}
   #kind-seg button[data-k="fresh"].on{background:var(--honey-soft);border-color:var(--honey);color:var(--honey-deep);}
   .ghead{display:flex;align-items:center;gap:8px;padding:14px 14px;cursor:pointer;}
@@ -106,7 +115,7 @@
   .ghead .gname{font-size:16px;font-weight:800;letter-spacing:-.4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;gap:6px;}
   .tagdot{font-size:10px;font-weight:800;padding:2px 7px;border-radius:999px;flex:0 0 auto;}
   .tagdot.fresh{background:var(--honey-soft);color:var(--honey-deep);}
-  .tagdot.dryt{background:var(--clay-soft);color:var(--clay);}
+  .tagdot.dryt{background:#E2D2A4;color:#5E4A18;}
   .ghead .gtype{font-size:11.5px;color:var(--muted);font-weight:700;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
   .ghead .gr{flex:0 0 112px;text-align:right;}
   .ghead .grem{font-size:23px;font-weight:800;letter-spacing:-.7px;line-height:1;}
@@ -243,7 +252,7 @@
   let state={lots:[],batches:[]};
   let auth={id:'admin',h:null};
   let isAdmin=false;
-  let ui={tab:'inv',typeFilter:'전체',search:'',openRegions:{},histFilter:'전체',showOld:false,
+  let ui={tab:'inv',matView:'all',typeFilter:'전체',search:'',openRegions:{},histFilter:'전체',showOld:false,
           inboundKind:'fresh',inboundUnit:'kg',ratioMode:'fresh',edit:null,modalResult:''};
 
   const DKEY='pollen_data_v3', AKEY='pollen_auth_v3', SKEY='pollen_session_v3';
@@ -255,8 +264,8 @@
   let fbDb=null,fbDataRef=null,fbAuthRef=null,fbSeeded=false;
   function fbInit(){firebase.initializeApp(FIREBASE_CONFIG);fbDb=firebase.firestore();fbDataRef=fbDb.collection('pollen').doc('data');fbAuthRef=fbDb.collection('pollen').doc('auth');}
   async function saveAuth(){if(FB_READY&&fbAuthRef){try{await fbAuthRef.set(auth);}catch(e){}return;}await Store.set(AKEY,auth,true);}
-  function saveUiState(){try{localStorage.setItem('pollen_ui_v3',JSON.stringify({tab:ui.tab,openRegions:ui.openRegions,typeFilter:ui.typeFilter}));}catch(e){}}
-  function loadUiState(){try{const v=localStorage.getItem('pollen_ui_v3');if(v){const s=JSON.parse(v);if(s.tab)ui.tab=s.tab;if(s.openRegions)ui.openRegions=s.openRegions;if(s.typeFilter)ui.typeFilter=s.typeFilter;}}catch(e){}}
+  function saveUiState(){try{localStorage.setItem('pollen_ui_v3',JSON.stringify({tab:ui.tab,matView:ui.matView,openRegions:ui.openRegions,typeFilter:ui.typeFilter}));}catch(e){}}
+  function loadUiState(){try{const v=localStorage.getItem('pollen_ui_v3');if(v){const s=JSON.parse(v);if(s.tab)ui.tab=s.tab;if(s.matView)ui.matView=s.matView;if(s.openRegions)ui.openRegions=s.openRegions;if(s.typeFilter)ui.typeFilter=s.typeFilter;}}catch(e){}}
 
   function uid(p){return p+Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
   function hash(s){let h=5381;for(let i=0;i<s.length;i++){h=(((h<<5)+h)+s.charCodeAt(i))&0xffffffff;}return(h>>>0).toString(16);}
@@ -322,30 +331,49 @@
   function isOldDone(lot){if(lot.kind!=='fresh')return false;if(lotRemain(lot)>0)return false;const lu=lotLastUse(lot);return daysSince(lot.date)>365&&!!lu&&daysSince(lu)>365;}
 
   function renderFilters(){
-    const cats=['전체',...[...new Set(freshLots().map(l=>shortType(l.type)))].filter(Boolean).sort()];
+    const src=ui.matView==='dry'?dryLots():freshLots();
+    const cats=['전체',...[...new Set(src.map(l=>shortType(l.type)))].filter(Boolean).sort()];
     if(cats.indexOf(ui.typeFilter)<0)ui.typeFilter='전체';
     const el=document.getElementById('inv-filters');if(!el)return;
     el.innerHTML=cats.map(c=>`<button class="chip${ui.typeFilter===c?' on':''}" onclick="POLLEN.setType('${esc(c).replace(/'/g,"\\'")}')">${esc(c)}</button>`).join('');
   }
+  function freshGroupHTML(g){
+    const open=ui.openRegions[g.region];
+    const active=g.gl.filter(l=>lotRemain(l)>0),done=g.gl.filter(l=>lotRemain(l)<=0);
+    const lr=active.concat(done).map(l=>{const rem=lotRemain(l),used=lotUsed(l),s=statusOf(l);const pct=l.qty>0?Math.max(2,Math.round(rem/l.qty*100)):0;const dc=rem<=0?' done':'';
+      return `<div class="lot${dc}"><div class="ltop"><span class="ldate">${fmtDate(l.date)}${l.note?` · ${esc(l.note)}`:''}</span><span class="lstat ${s.cls}">${s.txt}</span></div><div class="lnums"><span>입고 <b>${num(l.qty)}</b></span><span>사용 <b>${num(used)}</b></span><span class="rem">잔량 <b>${num(rem)}kg</b></span></div><div class="bar ${s.bar}"><i style="width:${pct}%"></i></div></div>`;}).join('');
+    return `<div class="group${g.depleted?' depleted':''}${open?' open':''}"><div class="ghead" onclick="POLLEN.toggleGroup('${esc(g.region).replace(/'/g,"\\'")}')"><div class="gl"><div class="gname"><span class="tagdot fresh">생화분</span>${esc(g.region)}</div><div class="gtype">${esc(g.types.map(shortType).join(', '))} · ${g.gl.length}건${g.depleted?' · 사용완료':''}</div></div><div class="gr"><div class="grem">${num(g.rem)}<span class="u">kg</span></div><div class="gsub">입고 ${num(g.inn)} · 사용 ${num(g.used)}</div></div><svg class="caret" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg></div><div class="lots">${lr}</div></div>`;
+  }
+  function dryGroupHTML(dl){
+    const d=dryTotals();const open=ui.openRegions['__dry__']||ui.matView==='dry';
+    const rows=dl.slice().sort((a,b)=>a.date>b.date?-1:1).map(l=>`<div class="lot"><div class="ltop"><span class="ldate">${fmtDate(l.date)}${l.region?` · ${esc(l.region)}`:''}</span></div><div class="lnums"><span>입고 <b>${num(l.qty)}</b></span><span>${esc(shortType(l.type))}</span></div></div>`).join('')||'<div class="lot"><div class="lnums"><span>입고 기록 없음 (사용만 집계)</span></div></div>';
+    return `<div class="group dry${open?' open':''}"><div class="ghead" onclick="POLLEN.toggleGroup('__dry__')"><div class="gl"><div class="gname"><span class="tagdot dryt">건조</span>건조화분</div><div class="gtype">반죽 배합용 · ${dl.length}건 입고</div></div><div class="gr"><div class="grem${d.inn>0&&d.rem<0?' neg':''}">${d.inn>0?num(d.rem):num(d.used)}<span class="u">kg</span></div><div class="gsub">${d.inn>0?`입고 ${num(d.inn)} · 사용 ${num(d.used)}`:'사용만 집계'}</div></div><svg class="caret" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg></div><div class="lots">${rows}</div></div>`;
+  }
   function renderInventory(){
+    document.querySelectorAll('#mat-seg button').forEach(b=>b.classList.toggle('on',b.dataset.mv===ui.matView));
     renderFilters();
     const wrap=document.getElementById('inv-list');let html='';
-    const d=dryTotals(),dl=dryLots();
-    if(dl.length>0||d.used>0){
-      const open=ui.openRegions['__dry__'];
-      const rows=dl.slice().sort((a,b)=>a.date>b.date?-1:1).map(l=>`<div class="lot"><div class="ltop"><span class="ldate">${fmtDate(l.date)}${l.region?` · ${esc(l.region)}`:''}</span></div><div class="lnums"><span>입고 <b>${num(l.qty)}</b></span><span>${esc(shortType(l.type))}</span></div></div>`).join('')||'<div class="lot"><div class="lnums"><span>입고 기록 없음 (사용만 집계)</span></div></div>';
-      html+=`<div class="group dry${open?' open':''}"><div class="ghead" onclick="POLLEN.toggleGroup('__dry__')"><div class="gl"><div class="gname"><span class="tagdot dryt">건조</span>건조화분(유채)</div><div class="gtype">반죽 배합용 · ${dl.length}건 입고</div></div><div class="gr"><div class="grem${d.inn>0&&d.rem<0?' neg':''}">${d.inn>0?num(d.rem):num(d.used)}<span class="u">kg</span></div><div class="gsub">${d.inn>0?`입고 ${num(d.inn)} · 사용 ${num(d.used)}`:'사용만 집계'}</div></div><svg class="caret" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg></div><div class="lots">${rows}</div></div>`;
+    const mat=ui.matView,q=ui.search.trim();
+    if(mat==='all'||mat==='fresh'){
+      let lots=freshLots().slice();
+      if(!ui.showOld)lots=lots.filter(l=>!isOldDone(l));
+      if(mat!=='dry'&&ui.typeFilter!=='전체')lots=lots.filter(l=>shortType(l.type)===ui.typeFilter);
+      if(q)lots=lots.filter(l=>l.region.includes(q)||l.type.includes(q));
+      const groups={};lots.forEach(l=>{(groups[l.region]=groups[l.region]||[]).push(l);});
+      const arr=Object.keys(groups).map(region=>{const gl=groups[region].slice().sort((a,b)=>a.date>b.date?-1:1);const inn=gl.reduce((a,l)=>a+l.qty,0),used=gl.reduce((a,l)=>a+lotUsed(l),0);return{region,gl,inn,used,rem:inn-used,latest:gl[0]?gl[0].date:'',depleted:(inn-used)<=0,types:[...new Set(gl.map(l=>l.type))]};});
+      arr.sort((a,b)=>{if(a.depleted!==b.depleted)return a.depleted?1:-1;return a.latest>b.latest?-1:(a.latest<b.latest?1:0);});
+      html+=arr.map(freshGroupHTML).join('');
+      if(mat==='fresh'&&!html)html='<div class="empty">표시할 생화분 재고가 없어요.</div>';
     }
-    let lots=freshLots().slice();
-    if(!ui.showOld)lots=lots.filter(l=>!isOldDone(l));
-    if(ui.typeFilter!=='전체')lots=lots.filter(l=>shortType(l.type)===ui.typeFilter);
-    const q=ui.search.trim();if(q)lots=lots.filter(l=>l.region.includes(q)||l.type.includes(q));
-    const groups={};lots.forEach(l=>{(groups[l.region]=groups[l.region]||[]).push(l);});
-    const arr=Object.keys(groups).map(region=>{const gl=groups[region].slice().sort((a,b)=>a.date>b.date?-1:1);const inn=gl.reduce((a,l)=>a+l.qty,0),used=gl.reduce((a,l)=>a+lotUsed(l),0);return{region,gl,inn,used,rem:inn-used,types:[...new Set(gl.map(l=>l.type))]};}).sort((a,b)=>b.rem-a.rem);
-    html+=arr.map(g=>{const open=ui.openRegions[g.region];
-      const lr=g.gl.map(l=>{const rem=lotRemain(l),used=lotUsed(l),s=statusOf(l);const pct=l.qty>0?Math.max(2,Math.round(rem/l.qty*100)):0;return `<div class="lot"><div class="ltop"><span class="ldate">${fmtDate(l.date)}${l.note?` · ${esc(l.note)}`:''}</span><span class="lstat ${s.cls}">${s.txt}</span></div><div class="lnums"><span>입고 <b>${num(l.qty)}</b></span><span>사용 <b>${num(used)}</b></span><span class="rem">잔량 <b>${num(rem)}kg</b></span></div><div class="bar ${s.bar}"><i style="width:${pct}%"></i></div></div>`;}).join('');
-      return `<div class="group${open?' open':''}"><div class="ghead" onclick="POLLEN.toggleGroup('${esc(g.region).replace(/'/g,"\\'")}')"><div class="gl"><div class="gname"><span class="tagdot fresh">생화분</span>${esc(g.region)}</div><div class="gtype">${esc(g.types.map(shortType).join(', '))} · ${g.gl.length}건</div></div><div class="gr"><div class="grem">${num(g.rem)}<span class="u">kg</span></div><div class="gsub">입고 ${num(g.inn)} · 사용 ${num(g.used)}</div></div><svg class="caret" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg></div><div class="lots">${lr}</div></div>`;
-    }).join('');
+    if(mat==='all'||mat==='dry'){
+      let dl=dryLots().slice();const d=dryTotals();
+      if(mat==='dry'){
+        if(ui.typeFilter!=='전체')dl=dl.filter(l=>shortType(l.type)===ui.typeFilter);
+        if(q)dl=dl.filter(l=>l.region.includes(q)||l.type.includes(q));
+      }
+      if(dryLots().length>0||d.used>0){html+=dryGroupHTML(dl);}
+      else if(mat==='dry'){html+='<div class="empty">건조화분 입고 내역이 없어요.<br>관리자 로그인 후 <b>입고 → 건조화분</b>으로 등록하세요.</div>';}
+    }
     if(!html)html='<div class="empty">표시할 재고가 없어요.<br>관리자 로그인 후 <b>입고</b> 탭에서 등록하세요.</div>';
     wrap.innerHTML=html;
   }
@@ -370,10 +398,10 @@
         if(b.result)resLine=`<div class="h3 res-${b.result}">결과: ${b.result}${b.resultDate?` (${fmtDate(b.resultDate)})`:''}${b.resultNote?` · ${esc(b.resultNote)}`:''}</div>`;
         else if(isAdmin)resLine=`<div class="rbtn${overdue?' due':''}" onclick="event.stopPropagation();POLLEN.openEdit('batch','${b.id}')">${overdue?`결과 기록 권장 (투입 ${daysSince(b.date)}일 경과)`:'결과 입력'}</div>`;
         else resLine=`<div class="h3" style="color:var(--muted)">결과 ${overdue?'기록 권장':'미입력'}</div>`;
-        html+=`<div class="hitem out${overdue?' overdue':''}${isAdmin?' tap':''}"${isAdmin?` onclick="POLLEN.openEdit('batch','${b.id}')"`:''}><div class="htag out">투입</div><div class="hbody"><div class="h1">${esc(lot.region||'(삭제됨)')} → ${esc(b.place||'미지정')}</div><div class="h2">생화분 ${num(b.freshQty)} + 건조 ${num(b.dryQty||0)} (${ratio})${b.note?` · ${esc(b.note)}`:''}</div>${resLine}</div><div class="hright"><div class="hqty out">${num(b.freshQty+(b.dryQty||0))}kg</div>${isAdmin?`<button class="hdel" onclick="event.stopPropagation();POLLEN.del('batch','${b.id}')">×</button>`:''}</div></div>`;
+        html+=`<div class="hitem out${overdue?' overdue':''}${isAdmin?' tap':''}"${isAdmin?` onclick="POLLEN.openEdit('batch','${b.id}')"`:''}><div class="htag out">${esc((b.place||'미지정').slice(0,2))}<br>투입</div><div class="hbody"><div class="h1">${esc(b.place||'미지정')} 투입</div><div class="h2">${esc(lot.region||'(삭제됨)')} · 생화분 ${num(b.freshQty)} + 건조 ${num(b.dryQty||0)} (${ratio})${b.note?` · ${esc(b.note)}`:''}</div>${resLine}</div><div class="hright"><div class="hqty out">${num(b.freshQty+(b.dryQty||0))}kg</div>${isAdmin?`<button class="hdel" onclick="event.stopPropagation();POLLEN.del('batch','${b.id}')">×</button>`:''}</div></div>`;
       }else{
         const l=it.rec;const dry=it.kind==='dryin';
-        html+=`<div class="hitem ${dry?'dryin':'in'}${isAdmin?' tap':''}"${isAdmin?` onclick="POLLEN.openEdit('lot','${l.id}')"`:''}><div class="htag ${dry?'dryin':'in'}">${dry?'건조<br>입고':'입고'}</div><div class="hbody"><div class="h1">${esc(l.region||(dry?'건조화분':''))} · ${esc(shortType(l.type))}</div><div class="h2">입고 ${num(l.qty)}kg${l.note?` · ${esc(l.note)}`:''}</div></div><div class="hright"><div class="hqty ${dry?'dryin':'in'}">+${num(l.qty)}kg</div>${isAdmin?`<button class="hdel" onclick="event.stopPropagation();POLLEN.del('lot','${l.id}')">×</button>`:''}</div></div>`;
+        html+=`<div class="hitem ${dry?'dryin':'in'}${isAdmin?' tap':''}"${isAdmin?` onclick="POLLEN.openEdit('lot','${l.id}')"`:''}><div class="htag ${dry?'dryin':'in'}">${dry?'건조<br>입고':'생화분<br>입고'}</div><div class="hbody"><div class="h1">${dry?'건조화분 입고':'생화분 입고'} · ${esc(l.region||(dry?'건조화분':''))}</div><div class="h2">${esc(shortType(l.type))} · 입고 ${num(l.qty)}kg${l.note?` · ${esc(l.note)}`:''}</div></div><div class="hright"><div class="hqty ${dry?'dryin':'in'}">+${num(l.qty)}kg</div>${isAdmin?`<button class="hdel" onclick="event.stopPropagation();POLLEN.del('lot','${l.id}')">×</button>`:''}</div></div>`;
       }
     });
     wrap.innerHTML=html;
@@ -382,34 +410,47 @@
   /* ---------- 투입 생성 폼 ---------- */
   let selBatchLot='', batchSearchTxt='';
   function renderBatchForm(){
-    selBatchLot=''; batchSearchTxt='';
+    batchSearchTxt='';
     const sb=document.getElementById('b-search'); if(sb)sb.value='';
-    document.getElementById('b-date').value=todayISO();
-    renderBatchPicker(); recalc();
+    renderBatchPicker();
   }
   function renderBatchPicker(){
     const wrap=document.getElementById('b-lotpick'); if(!wrap)return;
     let lots=freshLots().filter(l=>lotRemain(l)>0);
     const q=batchSearchTxt.trim(); if(q)lots=lots.filter(l=>l.region.includes(q)||l.type.includes(q));
     lots.sort((a,b)=>a.date>b.date?-1:(a.date<b.date?1:(a.region<b.region?-1:1)));
-    if(lots.length===0){wrap.innerHTML='<div class="pickempty">'+(q?'검색 결과가 없어요':'사용 가능한 생화분 입고가 없어요')+'</div>';}
-    else{
-      wrap.innerHTML=lots.map(l=>{const sel=l.id===selBatchLot;const rem=lotRemain(l);
-        return `<div class="pickcard${sel?' sel':''}" onclick="POLLEN.pickLot('${l.id}')"><div class="pl"><div class="pname"><span class="tagdot fresh">생화분</span>${esc(l.region)}</div><div class="psub">${esc(shortType(l.type))} · ${fmtDate(l.date)} 입고</div></div><div class="pr"><div class="prem">${num(rem)}<span>kg</span></div>${sel?'<div class="pchk">✓ 선택됨</div>':''}</div></div>`;}).join('');
-    }
-    const sub=document.getElementById('b-submit');
-    if(sub){const none=lots.length===0;sub.disabled=none;sub.style.opacity=none?.5:1;}
+    if(lots.length===0){wrap.innerHTML='<div class="pickempty">'+(q?'검색 결과가 없어요':'사용 가능한 생화분 입고가 없어요')+'</div>';return;}
+    wrap.innerHTML=lots.map(l=>{const rem=lotRemain(l);
+      return `<div class="pickcard" onclick="POLLEN.pickLot('${l.id}')"><div class="pl"><div class="pname"><span class="tagdot fresh">생화분</span>${esc(l.region)}</div><div class="psub">${esc(shortType(l.type))} · ${fmtDate(l.date)} 입고</div></div><div class="pr"><div class="prem">${num(rem)}<span>kg</span></div><div class="pchk">선택 ›</div></div></div>`;}).join('');
   }
-  function ratioFreshVal(){const v=document.getElementById('b-ratio').value;return v==='custom'?Math.min(100,Math.max(0,parseFloat(document.getElementById('b-ratio-custom').value)||0)):parseFloat(v);}
-  function recalc(){
-    const c=computeBatch(ui.ratioMode,ratioFreshVal(),parseFloat(document.getElementById('b-qty').value)||0);
-    const lot=freshLots().find(l=>l.id===selBatchLot);
+  /* 새 투입 입력 모달 */
+  let nMode='fresh';
+  function nRatioVal(){const v=document.getElementById('n-ratio').value;return v==='custom'?Math.min(100,Math.max(0,parseFloat(document.getElementById('n-ratio-custom').value)||0)):parseFloat(v);}
+  function nRecalc(){
+    const lot=freshLots().find(l=>l.id===document.getElementById('n-lot').value);
+    const c=computeBatch(nMode,nRatioVal(),parseFloat(document.getElementById('n-qty').value)||0);
     let sub=`생화분 ${num(c.rf)}% · 건조화분 ${num(100-c.rf)}%`;
-    if(lot){const rem=lotRemain(lot);sub+=` &nbsp;|&nbsp; ${esc(lot.region)} 잔량 ${num(rem)}kg`;if(c.fresh>rem)sub+=` <span class="warn">→ 생화분 부족!</span>`;}
-    else sub+=` &nbsp;|&nbsp; <span class="warn">출처를 먼저 선택하세요</span>`;
+    if(lot){const rem=lotRemain(lot);sub+=` &nbsp;|&nbsp; 잔량 ${num(rem)}kg`;if(c.fresh>rem)sub+=` <span class="warn">→ 생화분 부족!</span>`;}
     const d=dryTotals();if(c.dry>0&&d.inn>0&&c.dry>d.rem)sub+=` <span class="warn">· 건조화분 부족(${num(d.rem)}kg)</span>`;
-    document.querySelector('#b-preview .pmain').textContent=`생화분 ${num(c.fresh)}kg + 건조화분 ${num(c.dry)}kg = 총 반죽 ${num(c.total)}kg`;
-    document.querySelector('#b-preview .psub').innerHTML=sub;
+    document.querySelector('#n-preview .pmain').textContent=`생화분 ${num(c.fresh)}kg + 건조화분 ${num(c.dry)}kg = 총 반죽 ${num(c.total)}kg`;
+    document.querySelector('#n-preview .psub').innerHTML=sub;
+  }
+  function openNewBatch(lot){
+    nMode='fresh';
+    showSheet(`<h2>먹이 투입 기록</h2>
+      <div class="pickcard sel" style="cursor:default;margin-bottom:14px;"><div class="pl"><div class="pname"><span class="tagdot fresh">생화분</span>${esc(lot.region)}</div><div class="psub">${esc(shortType(lot.type))} · ${fmtDate(lot.date)} 입고 · 잔량 ${num(lotRemain(lot))}kg</div></div></div>
+      <input type="hidden" id="n-lot" value="${lot.id}">
+      <div class="field"><label>투입일자</label><input type="date" id="n-date" value="${todayISO()}"></div>
+      <div class="seg" id="n-mode-seg"><button class="on" data-m="fresh" onclick="POLLEN.nMode('fresh')">생화분량 기준</button><button data-m="total" onclick="POLLEN.nMode('total')">총 반죽량 기준</button></div>
+      <div class="field"><label id="n-qtylabel">꺼낸 생화분량 (kg)</label><input type="number" id="n-qty" inputmode="decimal" placeholder="예: 32" oninput="POLLEN.onNBatch()"></div>
+      <div class="field"><label>배합 비율 (생화분 : 건조화분)</label><select id="n-ratio" onchange="POLLEN.nRatioChange()"><option value="100">생화분 100% (건조 0%)</option><option value="40">생화분 40% : 건조 60%</option><option value="35">생화분 35% : 건조 65%</option><option value="custom">직접 입력</option></select><input type="number" id="n-ratio-custom" inputmode="decimal" placeholder="생화분 비율 % (예: 50)" style="display:none;margin-top:7px;" oninput="POLLEN.onNBatch()"></div>
+      <div class="preview" id="n-preview"><div class="pmain"></div><div class="psub"></div></div>
+      <div class="field"><label>투입처</label><select id="n-place" onchange="document.getElementById('n-place-custom').style.display=this.value==='custom'?'block':'none'"><option>산란실</option><option>사육실</option><option value="custom">직접 입력</option></select><input id="n-place-custom" placeholder="투입처 직접 입력" style="display:none;margin-top:7px;"></div>
+      <div class="field"><label>투입 메모 (선택)</label><textarea id="n-note" placeholder="배합·투입 관련 메모"></textarea></div>
+      <div class="hint">⏳ 결과(생육상태)는 나중에 <b>이력 탭</b>에서 입력하세요.</div>
+      <div class="err" id="n-err"></div>
+      <div class="mbtns"><button class="cancel" onclick="POLLEN.closeSheet()">취소</button><button class="save" onclick="POLLEN.saveNewBatch()">투입 기록</button></div>`);
+    nRecalc();
   }
 
   /* ---------- 모달 ---------- */
@@ -590,17 +631,18 @@
   const POLLEN={
     tab(n){ui.tab=n;document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id==='panel-'+n));document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.t===n));if(n==='use')renderBatchForm();saveUiState();window.scrollTo(0,0);},
     toggleGroup(r){ui.openRegions[r]=!ui.openRegions[r];renderInventory();saveUiState();},
+    setMat(m){ui.matView=m;ui.typeFilter='전체';renderInventory();saveUiState();},
     setType(t){ui.typeFilter=t;renderInventory();saveUiState();},
     toggleOld(el){ui.showOld=!ui.showOld;el.classList.toggle('on',ui.showOld);el.textContent=ui.showOld?'완료 1년+ 표시 중':'완료 1년+ 숨김 중';renderInventory();},
     onSearch(v){ui.search=v;renderInventory();},
     batchSearch(v){batchSearchTxt=v;renderBatchPicker();},
-    pickLot(id){selBatchLot=id;renderBatchPicker();recalc();},
     setHist(t,el){ui.histFilter=t;document.querySelectorAll('#hist-filters .chip').forEach(c=>c.classList.remove('on'));el.classList.add('on');renderHistory();},
     setKind(k){ui.inboundKind=k;document.querySelectorAll('#kind-seg button').forEach(b=>b.classList.toggle('on',b.dataset.k===k));document.getElementById('in-type').value=k==='fresh'?'생화분(도토리)':'건조화분(유채)';document.getElementById('in-region-label').textContent=k==='fresh'?'지역(대표)':'구입처/지역 (선택)';},
     setUnit(u){ui.inboundUnit=u;document.querySelectorAll('#unit-seg button').forEach(b=>b.classList.toggle('on',b.dataset.u===u));document.getElementById('in-qtylabel').textContent=u==='kg'?'입고량 (kg)':'입고량 (박스 · 1박스=20kg)';},
-    setMode(m){ui.ratioMode=m;document.querySelectorAll('#mode-seg button').forEach(b=>b.classList.toggle('on',b.dataset.m===m));document.getElementById('b-qtylabel').textContent=m==='fresh'?'꺼낸 생화분량 (kg)':'만들 총 반죽량 (kg)';recalc();},
-    onRatio(){document.getElementById('b-ratio-custom').style.display=document.getElementById('b-ratio').value==='custom'?'block':'none';recalc();},
-    onBatch(){recalc();},
+    pickLot(id){if(!isAdmin){openLogin();return;}const lot=freshLots().find(l=>l.id===id);if(lot)openNewBatch(lot);},
+    nMode(m){nMode=m;document.querySelectorAll('#n-mode-seg button').forEach(b=>b.classList.toggle('on',b.dataset.m===m));document.getElementById('n-qtylabel').textContent=m==='fresh'?'꺼낸 생화분량 (kg)':'만들 총 반죽량 (kg)';nRecalc();},
+    nRatioChange(){document.getElementById('n-ratio-custom').style.display=document.getElementById('n-ratio').value==='custom'?'block':'none';nRecalc();},
+    onNBatch(){nRecalc();},
     modalRecalc(){modalRecalc();},
     modalRatio(){document.getElementById('m-ratio-custom').style.display=document.getElementById('m-ratio').value==='custom'?'block':'none';modalRecalc();},
     modalResult(r,el){ui.modalResult=ui.modalResult===r?'':r;document.querySelectorAll('#m-result-chips .rchip').forEach(c=>c.classList.remove('on'));if(ui.modalResult)el.classList.add('on');},
@@ -615,17 +657,18 @@
       state.lots.push({id:uid('L'),kind:ui.inboundKind,date:date||todayISO(),region,type,qty,note});
       await persist();render();document.getElementById('in-region').value='';document.getElementById('in-qty').value='';document.getElementById('in-note').value='';toast(`입고 등록 · ${num(qty)}kg`);this.tab('inv');
     },
-    async addBatch(){
-      if(!isAdmin){openLogin();return;}const lotId=selBatchLot;const date=document.getElementById('b-date').value;const err=document.getElementById('b-err');const lot=freshLots().find(l=>l.id===lotId);
-      const place=document.getElementById('b-place').value==='custom'?(document.getElementById('b-place-custom').value.trim()||'기타'):document.getElementById('b-place').value;const note=document.getElementById('b-note').value.trim();
-      if(!lot){err.textContent='생화분 출처를 선택해 주세요.';err.classList.add('show');return;}
-      const c=computeBatch(ui.ratioMode,ratioFreshVal(),parseFloat(document.getElementById('b-qty').value)||0);
+    async saveNewBatch(){
+      if(!isAdmin){openLogin();return;}
+      const lotId=document.getElementById('n-lot').value;const date=document.getElementById('n-date').value;const err=document.getElementById('n-err');const lot=freshLots().find(l=>l.id===lotId);
+      const place=document.getElementById('n-place').value==='custom'?(document.getElementById('n-place-custom').value.trim()||'기타'):document.getElementById('n-place').value;const note=document.getElementById('n-note').value.trim();
+      if(!lot){err.textContent='생화분 출처를 찾을 수 없어요.';err.classList.add('show');return;}
+      const c=computeBatch(nMode,nRatioVal(),parseFloat(document.getElementById('n-qty').value)||0);
       if(!(c.fresh>0)){err.textContent='사용량(반죽량)을 올바르게 입력해 주세요.';err.classList.add('show');return;}
       if(!(c.rf>0)){err.textContent='생화분 비율을 1% 이상으로 입력해 주세요.';err.classList.add('show');return;}
       if(c.fresh>lotRemain(lot)){err.textContent=`생화분 잔량(${num(lotRemain(lot))}kg)보다 많이 사용할 수 없어요.`;err.classList.add('show');return;}
       err.classList.remove('show');
       state.batches.push({id:uid('B'),date:date||todayISO(),freshLotId:lotId,freshQty:c.fresh,dryQty:c.dry,ratioFresh:c.rf,place,note,result:'',resultDate:'',resultNote:''});
-      await persist();render();document.getElementById('b-qty').value='';document.getElementById('b-note').value='';renderBatchForm();toast(`투입 기록 · 총 ${num(c.total)}kg → ${place} (결과는 이력에서 나중에 입력)`);this.tab('hist');
+      await persist();hideSheet();render();renderBatchPicker();toast(`투입 기록 · 총 ${num(c.total)}kg → ${place} (결과는 이력에서 나중에 입력)`);
     },
 
     openEdit(type,id){if(!isAdmin)return;if(type==='lot'){const l=state.lots.find(x=>x.id===id);if(l){ui.edit={type,id};openEditLot(l);}}else{const b=state.batches.find(x=>x.id===id);if(b){ui.edit={type,id};openEditBatch(b);}}},
@@ -707,6 +750,7 @@
 
       <div class="panel active" id="panel-inv">
         <div class="strip" id="strip"></div>
+        <div class="seg matseg" id="mat-seg"><button class="on" data-mv="all" onclick="POLLEN.setMat('all')">전체</button><button data-mv="fresh" onclick="POLLEN.setMat('fresh')">🌼 생화분</button><button data-mv="dry" onclick="POLLEN.setMat('dry')">🍂 건조화분</button></div>
         <div class="filters" id="inv-filters"></div>
         <div class="filters"><button class="chip" id="oldchip" onclick="POLLEN.toggleOld(this)">완료 1년+ 숨김 중</button></div>
         <input class="search" placeholder="입고처·화분종류 검색 (예: 고흥, 다래)" oninput="POLLEN.onSearch(this.value)">
@@ -733,20 +777,11 @@
         <div class="section-h">반죽 · 먹이 투입 기록</div>
         <div class="formcard">
           <div class="needlogin" style="display:none;">🔒 보기 전용이에요. 입력하려면 <button class="linklike" onclick="POLLEN.askLogin()">관리자 로그인</button>이 필요합니다.</div>
-          <div class="field"><label>① 생화분 출처 선택 <span class="reqmark">(탭해서 선택)</span></label>
+          <div class="field"><label>생화분 출처 선택 <span class="reqmark">(카드를 누르면 입력 창이 열려요)</span></label>
             <input class="search" id="b-search" placeholder="입고처·종류 검색" oninput="POLLEN.batchSearch(this.value)">
             <div id="b-lotpick" class="lotpick"></div>
           </div>
-          <div class="field"><label>② 투입일자</label><input type="date" id="b-date"></div>
-          <div class="seg" id="mode-seg"><button class="on" data-m="fresh" onclick="POLLEN.setMode('fresh')">생화분량 기준</button><button data-m="total" onclick="POLLEN.setMode('total')">총 반죽량 기준</button></div>
-          <div class="field"><label id="b-qtylabel">꺼낸 생화분량 (kg)</label><input type="number" id="b-qty" inputmode="decimal" placeholder="예: 32" oninput="POLLEN.onBatch()"></div>
-          <div class="field"><label>배합 비율 (생화분 : 건조화분)</label><select id="b-ratio" onchange="POLLEN.onRatio()"><option value="100">생화분 100% (건조 0%) · 산란실</option><option value="40">생화분 40% : 건조 60%</option><option value="35">생화분 35% : 건조 65%</option><option value="custom">직접 입력</option></select><input type="number" id="b-ratio-custom" inputmode="decimal" placeholder="생화분 비율 % (예: 50)" style="display:none;margin-top:7px;" oninput="POLLEN.onBatch()"></div>
-          <div class="preview" id="b-preview"><div class="pmain"></div><div class="psub"></div></div>
-          <div class="field"><label>투입처</label><select id="b-place" onchange="document.getElementById('b-place-custom').style.display=this.value==='custom'?'block':'none'"><option>산란실</option><option>사육실</option><option value="custom">직접 입력</option></select><input id="b-place-custom" placeholder="투입처 직접 입력" style="display:none;margin-top:7px;"></div>
-          <div class="field"><label>투입 메모 (선택)</label><textarea id="b-note" placeholder="배합·투입 관련 메모"></textarea></div>
           <div class="hint">⏳ 결과(생육상태)는 지금 입력하지 않아요. 먹이 투입 후 한 달쯤 지나 <b>이력 탭</b>에서 해당 건을 눌러 결과를 기록하세요.</div>
-          <div class="err" id="b-err"></div>
-          <button class="submit use" id="b-submit" onclick="POLLEN.addBatch()">투입 기록</button>
         </div>
       </div>
 
