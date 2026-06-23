@@ -331,7 +331,10 @@
   function isOldDone(lot){if(lot.kind!=='fresh')return false;if(lotRemain(lot)>0)return false;const lu=lotLastUse(lot);return daysSince(lot.date)>365&&!!lu&&daysSince(lu)>365;}
 
   function renderFilters(){
-    const src=ui.matView==='dry'?dryLots():freshLots();
+    let src;
+    if(ui.matView==='dry')src=dryLots();
+    else if(ui.matView==='fresh')src=freshLots();
+    else src=[...freshLots(),...dryLots()];
     const cats=['전체',...[...new Set(src.map(l=>shortType(l.type)))].filter(Boolean).sort()];
     if(cats.indexOf(ui.typeFilter)<0)ui.typeFilter='전체';
     const el=document.getElementById('inv-filters');if(!el)return;
@@ -367,11 +370,11 @@
     }
     if(mat==='all'||mat==='dry'){
       let dl=dryLots().slice();const d=dryTotals();
-      if(mat==='dry'){
-        if(ui.typeFilter!=='전체')dl=dl.filter(l=>shortType(l.type)===ui.typeFilter);
-        if(q)dl=dl.filter(l=>l.region.includes(q)||l.type.includes(q));
-      }
-      if(dryLots().length>0||d.used>0){html+=dryGroupHTML(dl);}
+      const filtered=(ui.typeFilter!=='전체')||!!q;
+      if(ui.typeFilter!=='전체')dl=dl.filter(l=>shortType(l.type)===ui.typeFilter);
+      if(q)dl=dl.filter(l=>l.region.includes(q)||l.type.includes(q));
+      const show=filtered?(dl.length>0):(dryLots().length>0||d.used>0);
+      if(show){html+=dryGroupHTML(dl);}
       else if(mat==='dry'){html+='<div class="empty">건조화분 입고 내역이 없어요.<br>관리자 로그인 후 <b>입고 → 건조화분</b>으로 등록하세요.</div>';}
     }
     if(!html)html='<div class="empty">표시할 재고가 없어요.<br>관리자 로그인 후 <b>입고</b> 탭에서 등록하세요.</div>';
