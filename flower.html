@@ -206,12 +206,12 @@
      비워두면(YOUR_ 그대로면) 이 기기에만 저장됩니다.
   =========================================================== */
   const FIREBASE_CONFIG={
-    apiKey:"YOUR_API_KEY",
-    authDomain:"YOUR_PROJECT.firebaseapp.com",
-    projectId:"YOUR_PROJECT_ID",
-    storageBucket:"YOUR_PROJECT.appspot.com",
-    messagingSenderId:"YOUR_SENDER_ID",
-    appId:"YOUR_APP_ID"
+    apiKey:"AIzaSyB2c0FEzPo2QA4S4LmF_9u6_XvkQ25ivb8",
+    authDomain:"flower-6b55e.firebaseapp.com",
+    projectId:"flower-6b55e",
+    storageBucket:"flower-6b55e.firebasestorage.app",
+    messagingSenderId:"395953668835",
+    appId:"1:395953668835:web:66961ec9249ea1b1663bd6"
   };
   /* ▲▲▲ 여기까지만 수정하면 됩니다 ▲▲▲ */
   const FB_READY=(typeof firebase!=='undefined')&&!!FIREBASE_CONFIG.projectId&&FIREBASE_CONFIG.projectId.indexOf('YOUR_')<0;
@@ -639,6 +639,8 @@
         </div>
       </div>
 
+      <div id="syncbar" class="syncbar"></div>
+
       <div class="panel active" id="panel-inv">
         <div class="strip" id="strip"></div>
         <div class="filters" id="inv-filters"><button class="chip on" onclick="POLLEN.setType('전체',this)">전체</button><button class="chip" onclick="POLLEN.setType('도토리',this)">도토리</button><button class="chip" onclick="POLLEN.setType('유채',this)">유채</button></div>
@@ -667,6 +669,7 @@
         <div class="section-h">반죽 · 먹이 투입 기록</div>
         <div class="formcard">
           <div class="needlogin" style="display:none;">🔒 보기 전용이에요. 입력하려면 <button class="linklike" onclick="POLLEN.askLogin()">관리자 로그인</button>이 필요합니다.</div>
+          <div class="field"><label>투입일자</label><input type="date" id="b-date"></div>
           <div class="field"><label>생화분 출처 (어느 입고처에서?)</label><select id="b-lot" onchange="POLLEN.onBatch()"></select></div>
           <div class="seg" id="mode-seg"><button class="on" data-m="fresh" onclick="POLLEN.setMode('fresh')">생화분량 기준</button><button data-m="total" onclick="POLLEN.setMode('total')">총 반죽량 기준</button></div>
           <div class="field"><label id="b-qtylabel">꺼낸 생화분량 (kg)</label><input type="number" id="b-qty" inputmode="decimal" placeholder="예: 32" oninput="POLLEN.onBatch()"></div>
