@@ -250,7 +250,7 @@
   const FB_READY=(typeof firebase!=='undefined')&&!!FIREBASE_CONFIG.projectId&&FIREBASE_CONFIG.projectId.indexOf('YOUR_')<0;
 
   let state={lots:[],batches:[]};
-  let auth={id:'admin',h:null};
+  let auth={h:null,v:2};
   let isAdmin=false;
   let ui={tab:'inv',matView:'all',typeFilter:'전체',search:'',openRegions:{},histFilter:'전체',showOld:false,
           inboundKind:'fresh',inboundUnit:'kg',ratioMode:'fresh',edit:null,modalResult:''};
@@ -510,15 +510,15 @@
 
   /* ---------- 로그인/설정 ---------- */
   function openLogin(){showSheet(`<h2>관리자 로그인</h2>
-    <div class="field"><label>아이디</label><input id="m-uid" autocapitalize="off" placeholder="아이디"></div>
-    <div class="field"><label>비밀번호</label><input id="m-pw" type="password" placeholder="비밀번호"></div>
+    <div class="field"><label>비밀번호</label><input id="m-pw" type="password" inputmode="text" placeholder="비밀번호" autofocus></div>
     <div class="err" id="m-err"></div>
-    <div class="hint">기본 계정 → 아이디 <b>doore1</b> / 비밀번호 <b>7878</b><br>필요하면 로그인 후 아래 설정에서 변경하세요. (간단한 보안용 잠금입니다)</div>
-    <div class="mbtns" style="margin-top:12px;"><button class="cancel" onclick="POLLEN.closeSheet()">취소</button><button class="save" onclick="POLLEN.login()">로그인</button></div>`);}
-  function openSettings(){showSheet(`<h2>관리자 설정</h2>
-    <div class="field"><label>아이디 변경</label><input id="m-uid" value="${esc(auth.id)}" autocapitalize="off"></div>
-    <div class="field"><label>새 비밀번호 (저장 시 필수)</label><input id="m-pw" type="password" placeholder="새 비밀번호 입력"></div>
+    <div class="hint">비밀번호만 입력하면 됩니다. (간단한 보안용 잠금입니다)<br>필요하면 로그인 후 아래 설정에서 비밀번호를 변경하세요.</div>
+    <div class="mbtns" style="margin-top:12px;"><button class="cancel" onclick="POLLEN.closeSheet()">취소</button><button class="save" onclick="POLLEN.login()">로그인</button></div>`);
+    setTimeout(()=>{const i=document.getElementById('m-pw');if(i){i.focus();i.addEventListener('keydown',e=>{if(e.key==='Enter')POLLEN.login();});}},50);}
+  function openSettings(){showSheet(`<h2>비밀번호 변경</h2>
+    <div class="field"><label>새 비밀번호</label><input id="m-pw" type="password" placeholder="새 비밀번호 입력"></div>
     <div class="err" id="m-err"></div>
+    <div class="hint">새 비밀번호는 모든 직원 기기에 함께 적용됩니다.</div>
     <div class="mbtns"><button class="cancel" onclick="POLLEN.closeSheet()">취소</button><button class="save" onclick="POLLEN.saveSettings()">저장</button></div>`);}
 
   /* ---------- 내보내기 (보고서형) ---------- */
@@ -701,15 +701,15 @@
     export(){exportData();},
     async reset(){if(!isAdmin)return;if(!confirm('모든 기록을 지우고 기본(엑셀) 데이터로 되돌릴까요?'))return;seed();await persist();render();if(ui.tab==='use')renderBatchForm();toast('기본 데이터로 초기화');},
 
-    async login(){const id=document.getElementById('m-uid').value.trim();const pw=document.getElementById('m-pw').value;const err=document.getElementById('m-err');
-      if(id===auth.id&&hash(id+':'+pw)===auth.h){isAdmin=true;await Store.set(SKEY,{admin:true},false);hideSheet();applyMode();toast('관리자로 로그인됨');}
-      else{err.textContent='아이디 또는 비밀번호가 올바르지 않아요.';err.classList.add('show');}},
+    async login(){const pw=document.getElementById('m-pw').value;const err=document.getElementById('m-err');
+      if(pw&&hash(pw)===auth.h){isAdmin=true;await Store.set(SKEY,{admin:true},false);hideSheet();applyMode();toast('관리자로 로그인됨');}
+      else{err.textContent='비밀번호가 올바르지 않아요.';err.classList.add('show');}},
     async logout(){if(!confirm('로그아웃 할까요?'))return;isAdmin=false;await Store.del(SKEY,false);applyMode();this.tab('inv');toast('로그아웃됨');},
     settings(){openSettings();},
-    async saveSettings(){const id=document.getElementById('m-uid').value.trim();const pw=document.getElementById('m-pw').value;const err=document.getElementById('m-err');
-      if(!id||!pw){err.textContent='아이디와 새 비밀번호를 모두 입력해 주세요.';err.classList.add('show');return;}
-      auth.id=id;auth.h=hash(id+':'+pw);
-      await saveAuth();hideSheet();toast('관리자 ID·비밀번호가 변경됨');}
+    async saveSettings(){const pw=document.getElementById('m-pw').value;const err=document.getElementById('m-err');
+      if(!pw){err.textContent='새 비밀번호를 입력해 주세요.';err.classList.add('show');return;}
+      auth={h:hash(pw),v:2};
+      await saveAuth();hideSheet();toast('비밀번호가 변경됨');}
   };
   window.POLLEN=POLLEN;
 
@@ -789,7 +789,7 @@
         <button class="exportbtn" onclick="POLLEN.export()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M4 21h16"/></svg>엑셀 보고서 내보내기</button>
         <div class="filters" id="hist-filters" style="margin-top:10px;"><button class="chip on" onclick="POLLEN.setHist('전체',this)">전체</button><button class="chip" onclick="POLLEN.setHist('입고',this)">입고</button><button class="chip" onclick="POLLEN.setHist('투입',this)">투입</button></div>
         <div id="hist-list"></div>
-        <div id="admin-tools" style="display:none;"><div class="adminbar"><button onclick="POLLEN.settings()">관리자 설정 (ID·PW)</button><button onclick="POLLEN.reset()">기본 데이터로 초기화</button></div></div>
+        <div id="admin-tools" style="display:none;"><div class="adminbar"><button onclick="POLLEN.settings()">비밀번호 변경</button><button onclick="POLLEN.reset()">기본 데이터로 초기화</button></div></div>
       </div>
 
       <div class="nav" id="nav"></div>
@@ -799,9 +799,10 @@
     applyMode();
   }
 
+  const DEFAULT_PW='d7878';
   async function fallbackInit(){
     let a=await Store.get(AKEY,true);
-    if(!a){a={id:'doore1',h:hash('doore1:7878')};await Store.set(AKEY,a,true);}
+    if(!a||a.v!==2){a={h:hash(DEFAULT_PW),v:2};await Store.set(AKEY,a,true);}
     auth=a;
     let d=await Store.get(DKEY,true);
     if(!d){const old=await Store.get('pollen_inventory_v2',false)||await Store.get('pollen_inventory_v1',false);if(old){d=migrate(old);}else{seed();d=state;}await Store.set(DKEY,d,true);}
@@ -814,8 +815,8 @@
     const sess=await Store.get(SKEY,false);isAdmin=!!(sess&&sess.admin);
     if(FB_READY){
       try{fbInit();}catch(e){await fallbackInit();return;}
-      try{const aDoc=await fbAuthRef.get();if(aDoc.exists){auth=aDoc.data();}else{auth={id:'doore1',h:hash('doore1:7878')};await fbAuthRef.set(auth);}}
-      catch(e){auth={id:'doore1',h:hash('doore1:7878')};}
+      try{const aDoc=await fbAuthRef.get();const ad=aDoc.exists?aDoc.data():null;if(ad&&ad.v===2){auth=ad;}else{auth={h:hash(DEFAULT_PW),v:2};await fbAuthRef.set(auth);}}
+      catch(e){auth={h:hash(DEFAULT_PW),v:2};}
       let firstSnap=true;
       fbDataRef.onSnapshot(async snap=>{
         let d=snap&&snap.exists?snap.data():null;
