@@ -214,8 +214,9 @@
   .hbody .h2{font-size:13.5px;color:var(--muted);margin-top:4px;font-weight:700;}
   .hbody .h-src{font-size:14.5px;margin-top:5px;font-weight:700;color:#7a6f60;line-height:1.4;}
   .hbody .h-src .rsrc{color:var(--mix-deep);font-weight:800;}
-  .hbody .h-mix{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px;}
-  .hbody .h-mix .mb{font-size:13px;font-weight:800;padding:3px 9px;border-radius:8px;white-space:nowrap;}
+  .hbody .h-mix{display:flex;flex-wrap:nowrap;justify-content:flex-start;gap:4px;margin-top:6px;overflow-x:auto;}
+  .hbody .h-mix::-webkit-scrollbar{display:none;}
+  .hbody .h-mix .mb{font-size:12.5px;font-weight:800;padding:3px 6px;border-radius:8px;white-space:nowrap;flex:0 0 auto;}
   .hbody .h-mix .mb.fresh{background:var(--honey-soft);color:var(--honey-deep);}
   .hbody .h-mix .mb.dry{background:var(--dry-soft);color:var(--dry-deep);}
   .hbody .h-mix .mb.ratio{background:var(--mix-soft);color:var(--mix-deep);}
@@ -463,7 +464,7 @@
         if(b.result)resLine=`<div class="h3 res-${b.result}">결과: ${b.result}${b.resultDate?` (${fmtDate(b.resultDate)})`:''}${b.resultNote?` · ${esc(b.resultNote)}`:''}</div>`;
         else if(isAdmin)resLine=`<div class="rbtn${overdue?' due':''}" onclick="event.stopPropagation();POLLEN.openEdit('batch','${b.id}')">${overdue?`결과 기록 권장 (사용 ${daysSince(b.date)}일 경과)`:'결과 입력'}</div>`;
         else resLine=`<div class="rbtn muted">결과 미입력</div>`;
-        const mb=[];if(b.freshQty>0)mb.push(`<span class="mb fresh">생화분 ${num(b.freshQty)}kg</span>`);if((b.dryQty||0)>0)mb.push(`<span class="mb dry">건조 ${num(b.dryQty||0)}kg</span>`);mb.push(`<span class="mb ratio">비율 ${ratio}</span>`);
+        const mb=[`<span class="mb fresh">생 ${num(b.freshQty)}kg</span>`,`<span class="mb dry">건 ${num(b.dryQty||0)}kg</span>`,`<span class="mb ratio">비율 ${ratio}</span>`];
         const srcLine=`<div class="h-src">출처: <span class="rsrc">${esc(srcTxt)}</span></div><div class="h-mix">${mb.join('')}</div>`;
         const memoLine=b.note?`<div class="h-memo">📝 ${esc(b.note)}</div>`:'';
         html+=`<div class="hitem out${overdue?' overdue':''}${isAdmin?' tap':''}"${isAdmin?` onclick="POLLEN.openEdit('batch','${b.id}')"`:''}><div class="htag out">${esc((b.place||'미지정').slice(0,2))}<br>사용</div><div class="hbody"><div class="h1">${esc(b.place||'미지정')} 사용</div>${srcLine}${memoLine}${resLine}</div><div class="hright"><div class="hqty out">${num(b.freshQty+(b.dryQty||0))}kg</div>${isAdmin?`<button class="hdel" onclick="event.stopPropagation();POLLEN.del('batch','${b.id}')">×</button>`:''}</div></div>`;
