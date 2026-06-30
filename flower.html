@@ -115,7 +115,8 @@
   .group.depleted .grem{color:var(--muted);}
   .lot.done .ldate,.lot.done .lnums,.lot.done .lnums b,.lot.done .lnums .rem b{color:#a99c87;}
   .lot.done .lstat{background:#ece4d6;color:#a99c87;}
-  .lot.done .bar i{background:#cdbfa6;}
+  .lot.done .bar i{background:#c07a4e;}
+  .lot.done .bar{background:#ead9c6;}
   #kind-seg button[data-k="dry"].on{background:var(--dry-soft);border-color:var(--dry);color:var(--dry-deep);}
   #kind-seg button[data-k="fresh"].on{background:var(--honey-soft);border-color:var(--honey);color:var(--honey-deep);}
   .ghead{display:flex;align-items:center;gap:8px;padding:14px 14px;cursor:pointer;}
@@ -150,7 +151,8 @@
   .lot .lnums .disp b{color:#9a3b2f;}
   .bar{height:7px;border-radius:999px;background:var(--line);margin-top:9px;overflow:hidden;}
   .bar i{display:block;height:100%;border-radius:999px;background:var(--honey);}
-  .bar.b-zero i{background:#d8b89a;}
+  .bar.b-zero i{background:#c07a4e;}
+  .bar.b-zero{background:#ead9c6;}
   .empty{text-align:center;color:var(--muted);font-size:13.5px;padding:34px 20px;line-height:1.7;}
 
   /* 폼 */
@@ -397,15 +399,20 @@
   function freshGroupHTML(g){
     const open=ui.openRegions[g.region];
     const active=g.gl.filter(l=>lotRemain(l)>0),done=g.gl.filter(l=>lotRemain(l)<=0);
-    const lr=active.concat(done).map(l=>{const rem=lotRemain(l),used=lotUsed(l),disp=lotDisposed(l),s=statusOf(l);const pct=l.qty>0?Math.max(2,Math.round(rem/l.qty*100)):0;const dc=rem<=0?' done':'';
+    const lr=active.concat(done).map(l=>{const rem=lotRemain(l),used=lotUsed(l),disp=lotDisposed(l),s=statusOf(l);const pct=rem<=0?100:(l.qty>0?Math.max(2,Math.round(rem/l.qty*100)):0);const dc=rem<=0?' done':'';
       return `<div class="lot${dc}"><div class="ltop"><span class="ldate">${fmtDate(l.date)}${l.note?` · ${esc(l.note)}`:''}</span><span class="lstat ${s.cls}">${s.txt}</span></div><div class="lnums"><span>입고 <b>${num(l.qty)}</b></span><span>사용 <b>${num(used)}</b></span>${disp>0?`<span class="disp">폐기 <b>${num(disp)}</b></span>`:''}<span class="rem">잔량 <b>${num(rem)}kg</b></span></div><div class="bar ${s.bar}"><i style="width:${pct}%"></i></div></div>`;}).join('');
     const gdisp=g.gl.reduce((a,l)=>a+lotDisposed(l),0);
     return `<div class="group${g.depleted?' depleted':''}${open?' open':''}"><div class="ghead" onclick="POLLEN.toggleGroup('${esc(g.region).replace(/'/g,"\\'")}')"><div class="gl"><div class="gname"><span class="tagdot fresh">생화분</span>${esc(g.region)}</div><div class="gtype">${esc(g.types.map(shortType).join(', '))} · ${g.gl.length}건${g.depleted?' · 사용완료':''}</div></div><div class="gr"><div class="grem">${num(g.rem)}<span class="u">kg</span></div><div class="gsub">입고 ${num(g.inn)} · 사용 ${num(g.used)}${gdisp>0?` · 폐기 ${num(gdisp)}`:''}</div></div><svg class="caret" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg></div><div class="lots">${lr}</div></div>`;
   }
   function dryGroupHTML(dl){
     const d=dryTotals();const open=ui.openRegions['__dry__']||ui.matView==='dry';
-    const rows=dl.slice().sort((a,b)=>a.date>b.date?-1:1).map(l=>`<div class="lot"><div class="ltop"><span class="ldate">${fmtDate(l.date)}${l.region?` · ${esc(l.region)}`:''}</span></div><div class="lnums"><span>입고 <b>${num(l.qty)}</b></span><span>${esc(shortType(l.type))}</span></div></div>`).join('')||'<div class="lot"><div class="lnums"><span>입고 기록 없음 (사용만 집계)</span></div></div>';
-    return `<div class="group dry${open?' open':''}"><div class="ghead" onclick="POLLEN.toggleGroup('__dry__')"><div class="gl"><div class="gname"><span class="tagdot dryt">건조</span>건조화분</div><div class="gtype">배합용 · ${dl.length}건 입고</div></div><div class="gr"><div class="grem${d.inn>0&&d.rem<0?' neg':''}">${d.inn>0?num(d.rem):num(d.used)}<span class="u">kg</span></div><div class="gsub">${d.inn>0?`입고 ${num(d.inn)} · 사용 ${num(d.used)}${d.disp>0?` · 폐기 ${num(d.disp)}`:''}`:'사용만 집계'}</div></div><svg class="caret" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg></div><div class="lots">${rows}</div></div>`;
+    const dRem=Math.max(0,d.rem);
+    const remPct=d.inn>0?(d.rem<=0?100:Math.max(2,Math.round(dRem/d.inn*100))):0;
+    const usedPct=d.inn>0?Math.round(d.used/d.inn*100):0;
+    const dstat=d.inn<=0?{cls:'st-full',bar:'',txt:'집계'}:(d.rem<=0?{cls:'st-zero',bar:'b-zero',txt:'사용완료'}:(d.rem/d.inn<=0.25?{cls:'st-low',bar:'',txt:'잔량 적음'}:{cls:'st-full',bar:'',txt:'보유중'}));
+    const summary=d.inn>0?`<div class="lot"><div class="ltop"><span class="ldate">전체 사용율 ${usedPct}%</span><span class="lstat ${dstat.cls}">${dstat.txt}</span></div><div class="lnums"><span>입고 <b>${num(d.inn)}</b></span><span>사용 <b>${num(d.used)}</b></span>${d.disp>0?`<span class="disp">폐기 <b>${num(d.disp)}</b></span>`:''}<span class="rem">잔량 <b>${num(dRem)}kg</b></span></div><div class="bar ${dstat.bar}"><i style="width:${remPct}%"></i></div></div>`:'';
+    const rows=summary+(dl.slice().sort((a,b)=>a.date>b.date?-1:1).map(l=>`<div class="lot"><div class="ltop"><span class="ldate">${fmtDate(l.date)}${l.region?` · ${esc(l.region)}`:''}</span></div><div class="lnums"><span>입고 <b>${num(l.qty)}</b></span><span>${esc(shortType(l.type))}</span></div></div>`).join('')||'<div class="lot"><div class="lnums"><span>입고 기록 없음 (사용만 집계)</span></div></div>');
+    return `<div class="group dry${open?' open':''}"><div class="ghead" onclick="POLLEN.toggleGroup('__dry__')"><div class="gl"><div class="gname"><span class="tagdot dryt">건조</span>건조화분</div><div class="gtype">배합용 · ${dl.length}건 입고</div></div><div class="gr"><div class="grem${d.inn>0&&d.rem<0?' neg':''}">${d.inn>0?num(dRem):num(d.used)}<span class="u">kg</span></div><div class="gsub">${d.inn>0?`입고 ${num(d.inn)} · 사용 ${num(d.used)}${d.disp>0?` · 폐기 ${num(d.disp)}`:''}`:'사용만 집계'}</div></div><svg class="caret" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg></div><div class="lots">${rows}</div></div>`;
   }
   function renderInventory(){
     document.querySelectorAll('#mat-seg button').forEach(b=>b.classList.toggle('on',b.dataset.mv===ui.matView));
