@@ -35,7 +35,7 @@
   #app-root{font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif;color:var(--ink);background:var(--bg);max-width:var(--maxw);margin:0 auto;min-height:100vh;position:relative;padding-bottom:86px;font-feature-settings:"tnum";}
   .loading{padding:60px 20px;text-align:center;color:var(--muted);font-size:15px;}
 
-  .topbar{position:sticky;top:0;z-index:20;background:var(--bg);padding:13px 16px 10px;}
+  .topbar{position:sticky;top:0;z-index:20;background:var(--bg);padding:9px 14px 7px;}
   .brand{display:flex;align-items:center;gap:9px;margin-bottom:12px;}
   .brand .dot{width:28px;height:28px;border-radius:8px;background:linear-gradient(150deg,var(--honey),var(--honey-deep));display:flex;align-items:center;justify-content:center;flex:0 0 auto;}
   .brand .dot svg{width:16px;height:16px;}
@@ -48,19 +48,19 @@
 
   .hero{background:linear-gradient(155deg,var(--honey) 0%,var(--honey-deep) 100%);border-radius:var(--radius);padding:17px 18px 16px;color:#fff;box-shadow:0 8px 22px -10px rgba(169,101,15,.55);}
   .herowrap{display:flex;gap:10px;}
-  .herocard{flex:1;min-width:0;border-radius:var(--radius);padding:15px 14px 13px;color:#fff;}
+  .herocard{flex:1;min-width:0;border-radius:var(--radius);padding:11px 13px 10px;color:#fff;}
   .herocard.fresh{background:linear-gradient(155deg,#E59A2A 0%,#B5701A 100%);box-shadow:0 8px 20px -11px rgba(169,101,15,.6);}
   .herocard.dry{background:linear-gradient(155deg,#8C7A4A 0%,#5E4E2A 100%);box-shadow:0 8px 20px -11px rgba(70,56,28,.55);}
-  .herocard .lbl{font-size:12.5px;font-weight:800;opacity:.95;white-space:nowrap;}
-  .herocard .big{font-size:30px;font-weight:800;letter-spacing:-1.2px;line-height:1.05;margin:5px 0 1px;}
-  .herocard .big .u{font-size:14px;font-weight:800;margin-left:3px;opacity:.92;}
-  .herocard .box{font-size:11.5px;opacity:.9;font-weight:700;}
-  .row2{display:flex;gap:10px;margin-top:10px;}
-  .ministat{flex:1;min-width:0;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;border-left-width:4px;}
+  .herocard .lbl{font-size:12px;font-weight:800;opacity:.95;white-space:nowrap;}
+  .herocard .big{font-size:25px;font-weight:800;letter-spacing:-1.1px;line-height:1.05;margin:2px 0 0;}
+  .herocard .big .u{font-size:13px;font-weight:800;margin-left:3px;opacity:.92;}
+  .herocard .box{font-size:11px;opacity:.9;font-weight:700;}
+  .row2{display:flex;gap:9px;margin-top:7px;}
+  .ministat{flex:1;min-width:0;background:var(--card);border:1px solid var(--line);border-radius:11px;padding:7px 11px;border-left-width:4px;}
   .ministat.fresh{border-left-color:var(--honey);}
   .ministat.dry{border-left-color:#7A6433;}
-  .ministat .k{font-size:12.5px;color:var(--muted);font-weight:700;}
-  .ministat .v{font-size:17px;font-weight:800;letter-spacing:-.4px;margin-top:2px;}
+  .ministat .k{font-size:11.5px;color:var(--muted);font-weight:700;}
+  .ministat .v{font-size:15px;font-weight:800;letter-spacing:-.4px;margin-top:1px;}
   .boxnote{text-align:center;font-size:13px;color:var(--muted);font-weight:700;margin-top:9px;}
   .seg.matseg{margin:8px 0 4px;}
   .seg.matseg button[data-mv="dry"].on{background:#EBDFC4;border-color:#9A8246;color:#5E4E2A;}
@@ -103,6 +103,8 @@
   .chip{border:1px solid var(--line);background:var(--card);color:var(--muted);font-size:13.5px;font-weight:700;padding:6px 13px;border-radius:999px;cursor:pointer;transition:.15s;}
   .chip.on{background:var(--ink);color:#fff;border-color:var(--ink);}
   .yearfilters .chip.on{background:var(--mix);border-color:var(--mix);color:#fff;}
+  #used-year{gap:5px;}
+  #used-year .chip{padding:3px 10px;font-size:11.5px;}
   .search{width:100%;margin:8px 0 2px;padding:11px 13px;border:1px solid var(--line);border-radius:12px;font-size:14.5px;background:var(--card);color:var(--ink);}
   .search::placeholder{color:#b9ad99;}
 
@@ -161,6 +163,10 @@
   .field input,.field select,.field textarea{width:100%;padding:13px;border:1px solid var(--line);border-radius:12px;font-size:16px;font-weight:600;background:var(--card);color:var(--ink);font-family:inherit;}
   .field textarea{resize:vertical;min-height:46px;font-weight:500;}
   .field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--honey);box-shadow:0 0 0 3px var(--honey-soft);}
+  .datewrap{position:relative;}
+  .datewrap input[type=date]{color:transparent;}
+  .datewrap input[type=date]::-webkit-datetime-edit{opacity:0;}
+  .datewrap .datedisp{position:absolute;left:14px;top:50%;transform:translateY(-50%);pointer-events:none;font-size:16px;font-weight:700;color:var(--ink);}
   .seg{display:flex;gap:6px;margin-bottom:13px;}
   #mode-seg{flex-wrap:wrap;}
   #mode-seg button{flex:1 1 40%;font-size:13px;padding:11px 6px;}
@@ -310,6 +316,9 @@
   function serialToISO(s){return new Date(Date.UTC(1899,11,30)+s*86400000).toISOString().slice(0,10);}
   function todayISO(){const d=new Date();d.setMinutes(d.getMinutes()-d.getTimezoneOffset());return d.toISOString().slice(0,10);}
   function fmtDate(iso){if(!iso)return'';const p=iso.split('-');return p[0]+'.'+p[1]+'.'+p[2];}
+  function fmtKDate(iso){if(!iso)return'날짜 선택';const p=iso.split('-');return p[0]+'. '+p[1]+'. '+p[2];}
+  function dateField(id,iso,onchange){return `<div class="datewrap"><span class="datedisp" id="${id}-disp">${fmtKDate(iso)}</span><input type="date" id="${id}" value="${iso||''}" oninput="POLLEN.syncDate('${id}')"${onchange?` data-cb="${onchange}"`:''}></div>`;}
+  function syncDateDisp(id){const el=document.getElementById(id);const d=document.getElementById(id+'-disp');if(el&&d)d.textContent=fmtKDate(el.value);}
   function wd(iso){if(!iso)return'';const p=iso.split('-');const d=new Date(+p[0],+p[1]-1,+p[2]);return'('+['일','월','화','수','목','금','토'][d.getDay()]+')';}
   function daysSince(iso){if(!iso)return 0;const p=iso.split('-');const d=new Date(+p[0],+p[1]-1,+p[2]);return Math.floor((Date.now()-d.getTime())/86400000);}
   function num(n){return(Math.round(n*10)/10).toLocaleString('ko-KR',{maximumFractionDigits:1});}
@@ -326,6 +335,18 @@
   function lotRemain(lot){return Math.max(0,lot.qty-lotUsed(lot)-lotDisposed(lot));}
   function freshTotals(){const inn=freshLots().reduce((a,l)=>a+l.qty,0);const used=state.batches.reduce((a,b)=>a+b.freshQty,0);const disp=(state.disposals||[]).filter(d=>d.kind==='fresh').reduce((a,d)=>a+(d.qty||0),0);return{inn,used,disp,rem:inn-used-disp};}
   function dryTotals(){const inn=dryLots().reduce((a,l)=>a+l.qty,0);const used=state.batches.reduce((a,b)=>a+(b.dryQty||0),0);const disp=(state.disposals||[]).filter(d=>d.kind==='dry').reduce((a,d)=>a+(d.qty||0),0);return{inn,used,disp,rem:inn-used-disp};}
+  function dryLotsByAge(){return dryLots().slice().sort((a,b)=>a.date<b.date?-1:(a.date>b.date?1:(a.id<b.id?-1:1)));}
+  // 건조화분 로트별 사용량 배분: (1) 명시적으로 출처(dryLotId)를 지정한 사용/배합은 그 로트에 직접 귀속, (2) 미지정 사용분과 폐기는 가장 오래된 입고분부터 선입선출 차감
+  function dryAlloc(){
+    const map={};dryLots().forEach(l=>map[l.id]=0);
+    let pool=0; // 미지정(선입선출 대상) 사용량
+    state.batches.forEach(b=>{const q=b.dryQty||0;if(q<=0)return;if(b.dryLotId&&map[b.dryLotId]!=null)map[b.dryLotId]+=q;else pool+=q;});
+    (state.disposals||[]).filter(d=>d.kind==='dry').forEach(d=>{pool+=(d.qty||0);});
+    dryLotsByAge().forEach(l=>{const free=Math.max(0,l.qty-map[l.id]);const u=Math.min(free,Math.max(0,pool));map[l.id]+=u;pool-=u;});
+    return map;
+  }
+  function dryLotUsed(l,alloc){return (alloc||dryAlloc())[l.id]||0;}
+  function dryLotRemain(l,alloc){return Math.max(0,l.qty-dryLotUsed(l,alloc));}
   function disposeTotals(){const f=(state.disposals||[]).filter(d=>d.kind==='fresh').reduce((a,d)=>a+(d.qty||0),0);const dr=(state.disposals||[]).filter(d=>d.kind==='dry').reduce((a,d)=>a+(d.qty||0),0);return{fresh:f,dry:dr,total:f+dr,count:(state.disposals||[]).length};}
   function batchStats(){const c=state.batches.length;const dough=state.batches.reduce((a,b)=>a+b.freshQty+(b.dryQty||0),0);
     const by={},res={};state.batches.forEach(b=>{const p=b.place||'미지정';by[p]=(by[p]||0)+1;const r=b.result||'미입력';res[r]=(res[r]||0)+1;});
@@ -404,6 +425,14 @@
     const gdisp=g.gl.reduce((a,l)=>a+lotDisposed(l),0);
     return `<div class="group${g.depleted?' depleted':''}${open?' open':''}"><div class="ghead" onclick="POLLEN.toggleGroup('${esc(g.region).replace(/'/g,"\\'")}')"><div class="gl"><div class="gname"><span class="tagdot fresh">생화분</span>${esc(g.region)}</div><div class="gtype">${esc(g.types.map(shortType).join(', '))} · ${g.gl.length}건${g.depleted?' · 사용완료':''}</div></div><div class="gr"><div class="grem">${num(g.rem)}<span class="u">kg</span></div><div class="gsub">입고 ${num(g.inn)} · 사용 ${num(g.used)}${gdisp>0?` · 폐기 ${num(gdisp)}`:''}</div></div><svg class="caret" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg></div><div class="lots">${lr}</div></div>`;
   }
+  function dryRegionGroupHTML(g,alloc){
+    const key='__dry__'+g.region;const open=ui.openRegions[key];
+    const active=g.gl.filter(l=>dryLotRemain(l,alloc)>0),done=g.gl.filter(l=>dryLotRemain(l,alloc)<=0);
+    const lr=active.concat(done).map(l=>{const rem=dryLotRemain(l,alloc),used=dryLotUsed(l,alloc);const pct=rem<=0?100:(l.qty>0?Math.max(2,Math.round(rem/l.qty*100)):0);const dc=rem<=0?' done':'';
+      const st=rem<=0?{cls:'st-zero',txt:'사용완료',bar:'b-zero'}:(l.qty>0&&rem/l.qty<=0.25?{cls:'st-low',txt:'잔량 적음',bar:''}:{cls:'st-full',txt:'보유중',bar:''});
+      return `<div class="lot${dc}"><div class="ltop"><span class="ldate">${fmtDate(l.date)}${l.note?` · ${esc(l.note)}`:''}</span><span class="lstat ${st.cls}">${st.txt}</span></div><div class="lnums"><span>입고 <b>${num(l.qty)}</b></span><span>사용 <b>${num(used)}</b></span><span class="rem">잔량 <b>${num(rem)}kg</b></span></div><div class="bar ${st.bar}"><i style="width:${pct}%"></i></div></div>`;}).join('');
+    return `<div class="group dry${g.depleted?' depleted':''}${open?' open':''}"><div class="ghead" onclick="POLLEN.toggleGroup('${esc(key).replace(/'/g,"\\'")}')"><div class="gl"><div class="gname"><span class="tagdot dryt">건조</span>${esc(g.region)}</div><div class="gtype">${esc(g.types.map(shortType).join(', '))} · ${g.gl.length}건${g.depleted?' · 사용완료':''}</div></div><div class="gr"><div class="grem">${num(g.rem)}<span class="u">kg</span></div><div class="gsub">입고 ${num(g.inn)} · 사용 ${num(g.used)}</div></div><svg class="caret" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg></div><div class="lots">${lr}</div></div>`;
+  }
   function dryGroupHTML(dl){
     const d=dryTotals();const open=ui.openRegions['__dry__']||ui.matView==='dry';
     const dRem=Math.max(0,d.rem);
@@ -419,27 +448,30 @@
     renderFilters();
     const wrap=document.getElementById('inv-list');let html='';
     const mat=ui.matView,q=ui.search.trim();
+    const groupsArr=[];
     if(mat==='all'||mat==='fresh'){
       let lots=freshLots().slice();
       if(!ui.showOld)lots=lots.filter(l=>!isOldDone(l));
       if(mat!=='dry'&&ui.typeFilter!=='전체')lots=lots.filter(l=>shortType(l.type)===ui.typeFilter);
       if(q)lots=lots.filter(l=>l.region.includes(q)||l.type.includes(q));
       const groups={};lots.forEach(l=>{(groups[l.region]=groups[l.region]||[]).push(l);});
-      const arr=Object.keys(groups).map(region=>{const gl=groups[region].slice().sort((a,b)=>a.date>b.date?-1:1);const inn=gl.reduce((a,l)=>a+l.qty,0),used=gl.reduce((a,l)=>a+lotUsed(l),0);return{region,gl,inn,used,rem:inn-used,latest:gl[0]?gl[0].date:'',depleted:(inn-used)<=0,types:[...new Set(gl.map(l=>l.type))]};});
-      arr.sort((a,b)=>{if(a.depleted!==b.depleted)return a.depleted?1:-1;return a.latest>b.latest?-1:(a.latest<b.latest?1:0);});
-      html+=arr.map(freshGroupHTML).join('');
-      if(mat==='fresh'&&!html)html='<div class="empty">표시할 생화분 재고가 없어요.</div>';
+      Object.keys(groups).forEach(region=>{const gl=groups[region].slice().sort((a,b)=>a.date>b.date?-1:1);const inn=gl.reduce((a,l)=>a+l.qty,0),used=gl.reduce((a,l)=>a+lotUsed(l),0),disp=gl.reduce((a,l)=>a+lotDisposed(l),0);groupsArr.push({mat:'fresh',region,gl,inn,used,rem:inn-used-disp,latest:gl[0]?gl[0].date:'',depleted:(inn-used-disp)<=0,types:[...new Set(gl.map(l=>l.type))]});});
     }
     if(mat==='all'||mat==='dry'){
-      let dl=dryLots().slice();const d=dryTotals();
-      const filtered=(ui.typeFilter!=='전체')||!!q;
-      if(ui.typeFilter!=='전체')dl=dl.filter(l=>shortType(l.type)===ui.typeFilter);
-      if(q)dl=dl.filter(l=>l.region.includes(q)||l.type.includes(q));
-      const show=filtered?(dl.length>0):(dryLots().length>0||d.used>0);
-      if(show){html+=dryGroupHTML(dl);}
-      else if(mat==='dry'){html+='<div class="empty">건조화분 입고 내역이 없어요.<br>관리자 로그인 후 <b>입고 → 건조화분</b>으로 등록하세요.</div>';}
+      const alloc=dryAlloc();
+      let lots=dryLots().slice();
+      if(ui.typeFilter!=='전체')lots=lots.filter(l=>shortType(l.type)===ui.typeFilter);
+      if(q)lots=lots.filter(l=>(l.region||'').includes(q)||l.type.includes(q));
+      const groups={};lots.forEach(l=>{const r=l.region||'건조화분';(groups[r]=groups[r]||[]).push(l);});
+      Object.keys(groups).forEach(region=>{const gl=groups[region].slice().sort((a,b)=>a.date>b.date?-1:1);const inn=gl.reduce((a,l)=>a+l.qty,0),used=gl.reduce((a,l)=>a+dryLotUsed(l,alloc),0);groupsArr.push({mat:'dry',region,gl,inn,used,rem:inn-used,latest:gl[0]?gl[0].date:'',depleted:(inn-used)<=0,types:[...new Set(gl.map(l=>l.type))],alloc});});
     }
-    if(!html)html='<div class="empty">표시할 재고가 없어요.<br>관리자 로그인 후 <b>입고</b> 탭에서 등록하세요.</div>';
+    groupsArr.sort((a,b)=>{if(a.depleted!==b.depleted)return a.depleted?1:-1;return a.latest>b.latest?-1:(a.latest<b.latest?1:0);});
+    html=groupsArr.map(g=>g.mat==='dry'?dryRegionGroupHTML(g,g.alloc):freshGroupHTML(g)).join('');
+    if(!html){
+      if(mat==='fresh')html='<div class="empty">표시할 생화분 재고가 없어요.</div>';
+      else if(mat==='dry')html='<div class="empty">건조화분 입고 내역이 없어요.<br>관리자 로그인 후 <b>입고 → 건조화분</b>으로 등록하세요.</div>';
+      else html='<div class="empty">표시할 재고가 없어요.<br>관리자 로그인 후 <b>입고</b> 탭에서 등록하세요.</div>';
+    }
     wrap.innerHTML=html;
   }
 
@@ -499,7 +531,8 @@
     }
     return computeBatch(ui.ratioMode,ratioFreshVal(),parseFloat(document.getElementById('b-qty').value)||0);
   }
-  function isDryOnly(){return currentCalc().fresh===0&&currentCalc().total>0||(ui.ratioMode!=='amount'&&ratioFreshVal()===0);}
+  function freshInvolved(){if(ui.ratioMode==='amount')return (parseFloat((document.getElementById('b-fresh-amt')||{}).value)||0)>0;return ratioFreshVal()>0;}
+  function dryInvolved(){if(ui.ratioMode==='amount')return (parseFloat((document.getElementById('b-dry-amt')||{}).value)||0)>0;return ratioFreshVal()<100;}
   function renderBatchForm(){
     selBatchLot=''; selDryLot='';
     ui.ratioMode='dry';
@@ -508,45 +541,48 @@
     document.getElementById('b-amounts').style.display='none';
     const ql=document.getElementById('b-qtylabel'); if(ql)ql.textContent='사용한 건조화분량 (kg)';
     const rsel=document.getElementById('b-ratio'); if(rsel){rsel.value='40';document.getElementById('b-ratio-custom').style.display='none';}
-    const d=document.getElementById('b-date'); if(d)d.value=todayISO();
+    const d=document.getElementById('b-date'); if(d)d.value=todayISO();syncDateDisp('b-date');
     const q=document.getElementById('b-qty'); if(q)q.value='';
     const fa=document.getElementById('b-fresh-amt'); if(fa)fa.value='';
     const da=document.getElementById('b-dry-amt'); if(da)da.value='';
     const n=document.getElementById('b-note'); if(n)n.value='';
-    updateSourceBtn();
+    updateSources();
     recalc();
     renderDisposeForm();
   }
-  function updateSourceBtn(){
-    const btn=document.getElementById('b-sourcebtn'); if(!btn)return;
-    const label=document.getElementById('b-source-label');
-    const dryOnly=isDryOnly();
-    if(label)label.innerHTML=dryOnly?'건조화분 출처 <span class="reqmark">(선택 안 해도 됨)</span>':'생화분 출처 <span class="reqmark">(눌러서 선택)</span>';
-    if(dryOnly){
-      const dl=dryLots().find(l=>l.id===selDryLot);
-      if(dl){btn.classList.add('picked');btn.innerHTML=`🍂 ${esc(dl.region||'건조화분')} · ${esc(shortType(dl.type))} · ${fmtDate(dl.date)} ›`;}
-      else{btn.classList.remove('picked');btn.textContent='건조화분 출처 선택 (선택) ›';}
-    }else{
-      const lot=freshLots().find(l=>l.id===selBatchLot);
-      if(lot){btn.classList.add('picked');btn.innerHTML=`🌼 ${esc(lot.region)} · ${esc(shortType(lot.type))} · ${fmtDate(lot.date)} (잔량 ${num(lotRemain(lot))}kg) ›`;}
-      else{btn.classList.remove('picked');btn.textContent='출처를 선택하세요 ›';}
-    }
+  function updateSources(){
+    const ff=document.getElementById('b-fresh-source'),df=document.getElementById('b-dry-source');
+    const fInv=freshInvolved(),dInv=dryInvolved();
+    if(ff)ff.style.display=fInv?'block':'none';
+    if(df)df.style.display=dInv?'block':'none';
+    const fbtn=document.getElementById('b-sourcebtn');
+    if(fbtn){const lot=freshLots().find(l=>l.id===selBatchLot);
+      if(lot){fbtn.classList.add('picked');fbtn.innerHTML=`🌼 ${esc(lot.region)} · ${esc(shortType(lot.type))} · ${fmtDate(lot.date)} (잔량 ${num(lotRemain(lot))}kg) ›`;}
+      else{fbtn.classList.remove('picked');fbtn.textContent='출처를 선택하세요 ›';}}
+    const dbtn=document.getElementById('b-drysourcebtn');
+    if(dbtn){const dl=dryLots().find(l=>l.id===selDryLot);
+      if(dl){dbtn.classList.add('picked');dbtn.innerHTML=`🍂 ${esc(dl.region||'건조화분')} · ${esc(shortType(dl.type))} · ${fmtDate(dl.date)} (잔량 ${num(dryLotRemain(dl))}kg) ›`;}
+      else{dbtn.classList.remove('picked');dbtn.textContent='자동(오래된 입고분부터) · 눌러서 지정 ›';}}
   }
   function ratioFreshVal(){const v=document.getElementById('b-ratio').value;return v==='custom'?Math.min(100,Math.max(0,parseFloat(document.getElementById('b-ratio-custom').value)||0)):parseFloat(v);}
   function recalc(){
     const pv=document.getElementById('b-preview'); if(!pv)return;
     pv.className='preview m-'+ui.ratioMode;
     const c=currentCalc();
-    const dryOnly=c.fresh===0;
     let sub=`<b>생화분 ${num(c.rf)}% : 건조화분 ${num(100-c.rf)}%</b>`;
-    if(dryOnly){
-      sub+=` &nbsp;|&nbsp; 건조화분만 사용(소분/공급)`;
-    }else{
+    if(c.fresh>0){
       const lot=freshLots().find(l=>l.id===selBatchLot);
       if(lot){const rem=lotRemain(lot);sub+=` &nbsp;|&nbsp; ${esc(lot.region)} 잔량 ${num(rem)}kg`;if(c.fresh>rem)sub+=` <span class="warn">→ 생화분 부족!</span>`;}
-      else sub+=` &nbsp;|&nbsp; <span class="warn">출처를 먼저 선택하세요</span>`;
+      else sub+=` &nbsp;|&nbsp; <span class="warn">생화분 출처를 선택하세요</span>`;
+    }else{
+      sub+=` &nbsp;|&nbsp; 건조화분만 사용`;
     }
-    const d=dryTotals();if(c.dry>0&&d.inn>0&&c.dry>d.rem)sub+=` <span class="warn">· 건조화분 부족(${num(d.rem)}kg)</span>`;
+    const d=dryTotals();
+    if(c.dry>0){
+      const dl=dryLots().find(l=>l.id===selDryLot);
+      if(dl){const drem=dryLotRemain(dl);if(c.dry>drem)sub+=` <span class="warn">· 건조 ${esc(dl.region||'')} 잔량 부족(${num(drem)}kg)</span>`;}
+      else if(d.inn>0&&c.dry>d.rem)sub+=` <span class="warn">· 건조화분 부족(${num(d.rem)}kg)</span>`;
+    }
     document.querySelector('#b-preview .pmain').textContent=`생화분 ${num(c.fresh)}kg + 건조화분 ${num(c.dry)}kg = 총 배합량 ${num(c.total)}kg`;
     document.querySelector('#b-preview .psub').innerHTML=sub;
   }
@@ -574,7 +610,7 @@
   let dKind='fresh', dispLot='';
   function renderDisposeForm(){
     dKind='fresh'; dispLot='';
-    const d=document.getElementById('disp-date'); if(d)d.value=todayISO();
+    const d=document.getElementById('disp-date'); if(d)d.value=todayISO();syncDateDisp('disp-date');
     const q=document.getElementById('disp-qty'); if(q)q.value='';
     const n=document.getElementById('disp-note'); if(n)n.value='';
     const seg=document.getElementById('disp-kind-seg'); if(seg)seg.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.k==='fresh'));
@@ -596,7 +632,7 @@
 
   function openEditLot(l){
     showSheet(`<h2>입고 기록 수정</h2>
-      <div class="field"><label>입고일자</label><input type="date" id="m-date" value="${l.date}"></div>
+      <div class="field"><label>입고일자</label><div class="datewrap"><span class="datedisp" id="m-date-disp">${fmtKDate(l.date)}</span><input type="date" id="m-date" value="${l.date}" oninput="POLLEN.syncDate('m-date')"></div></div>
       <div class="field"><label>${l.kind==='dry'?'구입처/지역':'지역(대표)'}</label><input id="m-region" value="${esc(l.region)}"></div>
       <div class="field"><label>화분종류</label><input id="m-type" list="mtypelist" value="${esc(l.type)}"><datalist id="mtypelist">${typeListOpts()}</datalist></div>
       <div class="field"><label>입고량 (kg)</label><input type="number" id="m-qty" inputmode="decimal" value="${l.qty}"></div>
@@ -614,7 +650,7 @@
     const custPlace=PLACES.indexOf(b.place)<0;
     showSheet(`<h2>사용 기록 수정</h2>
       <div class="modalsec">사용 내용</div>
-      <div class="field"><label>사용일자</label><input type="date" id="m-date" value="${b.date}"></div>
+      <div class="field"><label>사용일자</label><div class="datewrap"><span class="datedisp" id="m-date-disp">${fmtKDate(b.date)}</span><input type="date" id="m-date" value="${b.date}" oninput="POLLEN.syncDate('m-date')"></div></div>
       <div class="field" id="m-source-field" style="display:${eDryOnly?'none':'block'}"><label>생화분 출처</label><select id="m-lot" onchange="POLLEN.modalRecalc()">${opts}</select></div>
       <div class="field"><label id="m-qtylabel">${eDryOnly?'사용한 건조화분량 (kg)':'꺼낸 생화분량 (kg)'}</label><input type="number" id="m-qty" inputmode="decimal" value="${eDryOnly?(b.dryQty||0):b.freshQty}" oninput="POLLEN.modalRecalc()"></div>
       <div class="field"><label>배합 비율 (생 : 건)</label><select id="m-ratio" onchange="POLLEN.modalRatio()">${ratioOptions(b.ratioFresh)}</select>
@@ -626,7 +662,7 @@
       <div class="modalsec">결과 기록 (먹이 사용 후 관찰 결과)</div>
       <div class="field"><label>결과 / 생육상태</label><div class="rchips" id="m-result-chips">
         ${['양호','보통','불량','관찰중'].map(r=>`<button class="rchip${r==='불량'?' bad':''}${ui.modalResult===r?' on':''}" onclick="POLLEN.modalResult('${r}',this)">${r}</button>`).join('')}</div></div>
-      <div class="field"><label>결과 기록일</label><input type="date" id="m-resdate" value="${b.resultDate||''}"></div>
+      <div class="field"><label>결과 기록일</label><div class="datewrap"><span class="datedisp" id="m-resdate-disp">${fmtKDate(b.resultDate||'')}</span><input type="date" id="m-resdate" value="${b.resultDate||''}" oninput="POLLEN.syncDate('m-resdate')"></div></div>
       <div class="field"><label>결과 메모</label><textarea id="m-resnote" placeholder="예: 산란 활발 / 폐사 발생 등">${esc(b.resultNote||'')}</textarea></div>
       <div class="err" id="m-err"></div>
       <div class="mbtns"><button class="cancel" onclick="POLLEN.closeSheet()">취소</button><button class="save" onclick="POLLEN.saveBatch()">저장</button></div>
@@ -701,11 +737,12 @@
     ws.views=[{state:'frozen',ySplit:3,showGridLines:false}];
 
     // 건조화분 시트
-    const wd2=wb.addWorksheet('건조화분');wd2.columns=[{width:13},{width:20},{width:18},{width:12},{width:24}];
-    title(wd2,1,'건조화분(유채) 입고',5,14);
-    wd2.getRow(3).values=['입고일자','구입처/지역','종류','입고(kg)','비고'];header(wd2,3,5);
-    let dr=4;dryLots().slice().sort((a,b)=>a.date<b.date?-1:1).forEach(l=>{wd2.getRow(dr).values=[fmtDate(l.date),l.region||'',l.type,l.qty,l.note||''];body(wd2,dr,5,{num:[4],align:['center','left','left','right','left']});dr++;});
-    wd2.getRow(dr).values=['합계','','',d.inn,''];body(wd2,dr,5,{bold:true,fill:TOT,num:[4],align:['center','left','left','right','left']});
+    const wd2=wb.addWorksheet('건조화분');wd2.columns=[{width:13},{width:18},{width:14},{width:11},{width:11},{width:11},{width:20}];
+    title(wd2,1,'건조화분(유채) 입고·재고 (입고처별)',7,14);
+    wd2.getRow(3).values=['입고일자','구입처/지역','종류','입고(kg)','사용(kg)','잔량(kg)','비고'];header(wd2,3,7);
+    const dalloc=dryAlloc();
+    let dr=4;dryLots().slice().sort((a,b)=>a.date<b.date?-1:1).forEach(l=>{const u=dryLotUsed(l,dalloc),rm=dryLotRemain(l,dalloc);wd2.getRow(dr).values=[fmtDate(l.date),l.region||'',l.type,l.qty,u,rm,l.note||''];body(wd2,dr,7,{num:[4,5,6],align:['center','left','left','right','right','right','left']});dr++;});
+    wd2.getRow(dr).values=['합계','','',d.inn,d.used,Math.max(0,d.rem),''];body(wd2,dr,7,{bold:true,fill:TOT,num:[4,5,6],align:['center','left','left','right','right','right','left']});
 
     // 폐기 시트
     const wp=wb.addWorksheet('폐기');wp.columns=[{width:13},{width:12},{width:20},{width:18},{width:12},{width:24}];
@@ -788,7 +825,8 @@
     setUsedYear(y,el){ui.usedYear=y;renderHeader();},
     setKind(k){ui.inboundKind=k;document.querySelectorAll('#kind-seg button').forEach(b=>b.classList.toggle('on',b.dataset.k===k));document.getElementById('in-type').value=k==='fresh'?'생화분(도토리)':'건조화분(유채)';document.getElementById('in-region-label').textContent=k==='fresh'?'지역(대표)':'구입처/지역 (선택)';},
     setUnit(u){ui.inboundUnit=u;document.querySelectorAll('#unit-seg button').forEach(b=>b.classList.toggle('on',b.dataset.u===u));document.getElementById('in-qtylabel').textContent=u==='kg'?'입고량 (kg)':'입고량 (박스 · 1박스=20kg)';},
-    openPicker(){const dryOnly=ratioFreshVal()===0;if(dryOnly)openPicker(function(id){selDryLot=id;updateSourceBtn();recalc();},'건조화분 출처 선택 (선택)','dry');else openPicker(function(id){selBatchLot=id;updateSourceBtn();recalc();},'생화분 출처 선택','fresh');},
+    openFreshPicker(){openPicker(function(id){selBatchLot=id;updateSources();recalc();},'생화분 출처 선택','fresh');},
+    openDryPicker(){openPicker(function(id){selDryLot=(selDryLot===id?'':id);updateSources();recalc();},'건조화분 출처 선택 (선택)','dry');},
     pickerSearch(v){batchSearchTxt=v;renderPickerList();},
     choosePickLot(id){hideSheet();const cb=pickCb;pickCb=null;if(cb)cb(id);},
     openDispPicker(){openPicker(function(id){dispLot=id;updateDispSourceBtn();},'폐기할 생화분 출처 선택');},
@@ -814,9 +852,10 @@
       err.classList.remove('show');
       await persist();render();renderDisposeForm();toast(`폐기 기록 · ${dKind==='fresh'?'생화분':'건조화분'} ${num(qty)}kg`);this.tab('hist');
     },
-    setMode(m){if(m==='fresh'&&ui.ratioMode!=='amount'&&ratioFreshVal()===0){toast('건조 100%(생화분 0%)에서는 생화분 기준을 쓸 수 없어요');return;}ui.ratioMode=m;document.querySelectorAll('#mode-seg button').forEach(b=>b.classList.toggle('on',b.dataset.m===m));const amount=m==='amount';document.getElementById('b-single').style.display=amount?'none':'block';document.getElementById('b-amounts').style.display=amount?'block':'none';if(!amount)document.getElementById('b-qtylabel').textContent=m==='fresh'?'꺼낸 생화분량 (kg)':(m==='dry'?'사용한 건조화분량 (kg)':'만들 총 배합량 (kg)');updateSourceBtn();recalc();},
-    onRatio(){document.getElementById('b-ratio-custom').style.display=document.getElementById('b-ratio').value==='custom'?'block':'none';const rf=ratioFreshVal();if(rf===0){selBatchLot='';if(ui.ratioMode==='fresh')this.setMode('dry');}else{selDryLot='';}updateSourceBtn();recalc();},
-    onBatch(){if(ui.ratioMode==='amount')updateSourceBtn();recalc();},
+    setMode(m){if(m==='fresh'&&ui.ratioMode!=='amount'&&ratioFreshVal()===0){toast('건조 100%(생화분 0%)에서는 생화분 기준을 쓸 수 없어요');return;}ui.ratioMode=m;document.querySelectorAll('#mode-seg button').forEach(b=>b.classList.toggle('on',b.dataset.m===m));const amount=m==='amount';document.getElementById('b-single').style.display=amount?'none':'block';document.getElementById('b-amounts').style.display=amount?'block':'none';if(!amount)document.getElementById('b-qtylabel').textContent=m==='fresh'?'꺼낸 생화분량 (kg)':(m==='dry'?'사용한 건조화분량 (kg)':'만들 총 배합량 (kg)');updateSources();recalc();},
+    onRatio(){document.getElementById('b-ratio-custom').style.display=document.getElementById('b-ratio').value==='custom'?'block':'none';const rf=ratioFreshVal();if(rf===0&&ui.ratioMode==='fresh')this.setMode('dry');updateSources();recalc();},
+    onBatch(){updateSources();recalc();},
+    syncDate(id){syncDateDisp(id);},
     modalRecalc(){modalRecalc();},
     modalRatio(){document.getElementById('m-ratio-custom').style.display=document.getElementById('m-ratio').value==='custom'?'block':'none';const rf=modalRatioVal();const sf=document.getElementById('m-source-field');if(sf)sf.style.display=rf===0?'none':'block';const ql=document.getElementById('m-qtylabel');if(ql)ql.textContent=rf===0?'사용한 건조화분량 (kg)':'꺼낸 생화분량 (kg)';modalRecalc();},
     modalResult(r,el){ui.modalResult=ui.modalResult===r?'':r;document.querySelectorAll('#m-result-chips .rchip').forEach(c=>c.classList.remove('on'));if(ui.modalResult)el.classList.add('on');},
@@ -843,11 +882,15 @@
         if(!lot){err.textContent='생화분 출처를 선택해 주세요.';err.classList.add('show');return;}
         if(c.fresh>lotRemain(lot)){err.textContent=`생화분 잔량(${num(lotRemain(lot))}kg)보다 많이 사용할 수 없어요.`;err.classList.add('show');return;}
         freshLotId=lot.id;
-      }else{
-        dryLotId=selDryLot||'';
       }
       const d=dryTotals();
-      if(c.dry>0&&d.inn>0&&c.dry>d.rem){err.textContent=`건조화분 잔량(${num(d.rem)}kg)보다 많이 사용할 수 없어요.`;err.classList.add('show');return;}
+      if(c.dry>0){
+        const dl=selDryLot?dryLots().find(l=>l.id===selDryLot):null;
+        if(dl){
+          if(c.dry>dryLotRemain(dl)){err.textContent=`선택한 건조화분(${esc(dl.region||'')}) 잔량(${num(dryLotRemain(dl))}kg)보다 많이 사용할 수 없어요.`;err.classList.add('show');return;}
+          dryLotId=dl.id;
+        }else if(d.inn>0&&c.dry>d.rem){err.textContent=`건조화분 잔량(${num(d.rem)}kg)보다 많이 사용할 수 없어요.`;err.classList.add('show');return;}
+      }
       err.classList.remove('show');
       state.batches.push({id:uid('B'),date:date||todayISO(),freshLotId,dryLotId,freshQty:c.fresh,dryQty:c.dry,ratioFresh:c.rf,place,note,result:'',resultDate:'',resultNote:''});
       await persist();render();renderBatchForm();toast(`사용 기록 · 총 ${num(c.total)}kg → ${place} (결과는 이력에서 나중에 입력)`);this.tab('hist');
@@ -932,8 +975,7 @@
           <div class="ministat fresh"><div class="k" id="h-fresh-used-k">생화분 사용 누적</div><div class="v" id="h-fresh-used">0 kg</div></div>
           <div class="ministat dry"><div class="k" id="h-dry-used-k">건조화분 사용 누적</div><div class="v" id="h-dry-used">0 kg</div></div>
         </div>
-        <div class="filters yearfilters" id="used-year" style="margin:8px 0 2px;"></div>
-        <div class="boxnote">📦 1박스 = 20kg 기준</div>
+        <div class="filters yearfilters" id="used-year" style="margin:6px 0 0;"></div>
       </div>
       </div>
 
@@ -954,7 +996,7 @@
         <div class="formcard">
           <div class="needlogin" style="display:none;">🔒 보기 전용이에요. 입력하려면 <button class="linklike" onclick="POLLEN.askLogin()">관리자 로그인</button>이 필요합니다.</div>
           <div class="seg" id="kind-seg"><button class="on" data-k="fresh" onclick="POLLEN.setKind('fresh')">생화분</button><button data-k="dry" onclick="POLLEN.setKind('dry')">건조화분(유채)</button></div>
-          <div class="field"><label>입고일자</label><input type="date" id="in-date" value="${todayISO()}"></div>
+          <div class="field"><label>입고일자</label><div class="datewrap"><span class="datedisp" id="in-date-disp">${fmtKDate(todayISO())}</span><input type="date" id="in-date" value="${todayISO()}" oninput="POLLEN.syncDate('in-date')"></div></div>
           <div class="field"><label id="in-region-label">지역(대표)</label><input id="in-region" list="regionlist" placeholder="예: 고흥(박명준)"><datalist id="regionlist">${regions}</datalist></div>
           <div class="field"><label>화분종류</label><input id="in-type" list="typelist" value="생화분(도토리)"><datalist id="typelist">${typeOpts}</datalist></div>
           <div class="field"><label id="in-qtylabel">입고량 (kg)</label><input type="number" id="in-qty" inputmode="decimal" placeholder="예: 600"><div class="seg" id="unit-seg" style="margin-top:7px;margin-bottom:0;"><button class="on" data-u="kg" onclick="POLLEN.setUnit('kg')">kg 단위</button><button data-u="box" onclick="POLLEN.setUnit('box')">박스 단위 (×20)</button></div><div class="hint">📦 1박스 = 20kg 기준이에요. 박스 단위로 입력하면 자동으로 ×20 환산됩니다.</div></div>
@@ -968,8 +1010,9 @@
         <div class="section-h">배합 · 먹이 사용 기록</div>
         <div class="formcard">
           <div class="needlogin" style="display:none;">🔒 보기 전용이에요. 입력하려면 <button class="linklike" onclick="POLLEN.askLogin()">관리자 로그인</button>이 필요합니다.</div>
-          <div class="field"><label id="b-source-label">생화분 출처 <span class="reqmark">(눌러서 선택)</span></label><button type="button" class="sourcebtn" id="b-sourcebtn" onclick="POLLEN.openPicker()">출처를 선택하세요 ›</button></div>
-          <div class="field"><label>사용일자</label><input type="date" id="b-date"></div>
+          <div class="field" id="b-fresh-source"><label>생화분 출처 <span class="reqmark">(눌러서 선택)</span></label><button type="button" class="sourcebtn" id="b-sourcebtn" onclick="POLLEN.openFreshPicker()">출처를 선택하세요 ›</button></div>
+          <div class="field" id="b-dry-source" style="display:none;"><label>건조화분 출처 <span class="reqmark">(선택)</span></label><button type="button" class="sourcebtn" id="b-drysourcebtn" onclick="POLLEN.openDryPicker()">건조화분 출처 선택 (선택) ›</button></div>
+          <div class="field"><label>사용일자</label><div class="datewrap"><span class="datedisp" id="b-date-disp">날짜 선택</span><input type="date" id="b-date" oninput="POLLEN.syncDate('b-date')"></div></div>
           <div class="seg" id="mode-seg"><button data-m="fresh" onclick="POLLEN.setMode('fresh')">생화분 기준</button><button class="on" data-m="dry" onclick="POLLEN.setMode('dry')">건조화분 기준</button><button data-m="total" onclick="POLLEN.setMode('total')">총 배합량 기준</button><button data-m="amount" onclick="POLLEN.setMode('amount')">분량 직접입력</button></div>
           <div id="b-single">
             <div class="field"><label id="b-qtylabel">사용한 건조화분량 (kg)</label><input type="number" id="b-qty" inputmode="decimal" placeholder="예: 48" oninput="POLLEN.onBatch()"></div>
@@ -993,7 +1036,7 @@
           <div class="hint">변질·오염되었거나 사용 후 남아 버리는 화분을 기록해요. 폐기하면 재고에서 차감되고 이력에 남습니다.</div>
           <div class="seg" id="disp-kind-seg" style="margin-top:10px;"><button class="on" data-k="fresh" onclick="POLLEN.dispKind('fresh')">🌼 생화분</button><button data-k="dry" onclick="POLLEN.dispKind('dry')">🍂 건조화분</button></div>
           <div class="field" id="disp-source-field"><label>생화분 출처 <span class="reqmark">(눌러서 선택)</span></label><button type="button" class="sourcebtn" id="disp-sourcebtn" onclick="POLLEN.openDispPicker()">출처를 선택하세요 ›</button></div>
-          <div class="field"><label>폐기일자</label><input type="date" id="disp-date"></div>
+          <div class="field"><label>폐기일자</label><div class="datewrap"><span class="datedisp" id="disp-date-disp">날짜 선택</span><input type="date" id="disp-date" oninput="POLLEN.syncDate('disp-date')"></div></div>
           <div class="field"><label>폐기량 (kg)</label><input type="number" id="disp-qty" inputmode="decimal" placeholder="예: 20"></div>
           <div class="field"><label>폐기 사유</label><select id="disp-reason" onchange="document.getElementById('disp-reason-custom').style.display=this.value==='custom'?'block':'none'"><option>변질·오염</option><option>유통기한 경과</option><option>사용 후 잔여</option><option value="custom">기타(직접 입력)</option></select><input id="disp-reason-custom" placeholder="사유 직접 입력" style="display:none;margin-top:7px;"></div>
           <div class="field"><label>메모 (선택)</label><textarea id="disp-note" placeholder="폐기 관련 메모"></textarea></div>
