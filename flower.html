@@ -336,6 +336,8 @@
   function freshTotals(){const inn=freshLots().reduce((a,l)=>a+l.qty,0);const used=state.batches.reduce((a,b)=>a+b.freshQty,0);const disp=(state.disposals||[]).filter(d=>d.kind==='fresh').reduce((a,d)=>a+(d.qty||0),0);return{inn,used,disp,rem:inn-used-disp};}
   function dryTotals(){const inn=dryLots().reduce((a,l)=>a+l.qty,0);const used=state.batches.reduce((a,b)=>a+(b.dryQty||0),0);const disp=(state.disposals||[]).filter(d=>d.kind==='dry').reduce((a,d)=>a+(d.qty||0),0);return{inn,used,disp,rem:inn-used-disp};}
   function dryLotsByAge(){return dryLots().slice().sort((a,b)=>a.date<b.date?-1:(a.date>b.date?1:(a.id<b.id?-1:1)));}
+  // 재고표/출처모달 공통 정렬: 날짜 내림차순, 같은 날짜는 입력(id) 순서 고정
+  function lotDateDesc(a,b){return a.date>b.date?-1:(a.date<b.date?1:(a.id<b.id?-1:1));}
   // 건조화분 로트별 사용량 배분: (1) 명시적으로 출처(dryLotId)를 지정한 사용/배합은 그 로트에 직접 귀속, (2) 미지정 사용분과 폐기는 가장 오래된 입고분부터 선입선출 차감
   function dryAlloc(){
     const map={};dryLots().forEach(l=>map[l.id]=0);
@@ -455,7 +457,7 @@
       if(mat!=='dry'&&ui.typeFilter!=='전체')lots=lots.filter(l=>shortType(l.type)===ui.typeFilter);
       if(q)lots=lots.filter(l=>l.region.includes(q)||l.type.includes(q));
       const groups={};lots.forEach(l=>{(groups[l.region]=groups[l.region]||[]).push(l);});
-      Object.keys(groups).forEach(region=>{const gl=groups[region].slice().sort((a,b)=>a.date>b.date?-1:1);const inn=gl.reduce((a,l)=>a+l.qty,0),used=gl.reduce((a,l)=>a+lotUsed(l),0),disp=gl.reduce((a,l)=>a+lotDisposed(l),0);groupsArr.push({mat:'fresh',region,gl,inn,used,rem:inn-used-disp,latest:gl[0]?gl[0].date:'',depleted:(inn-used-disp)<=0,types:[...new Set(gl.map(l=>l.type))]});});
+      Object.keys(groups).forEach(region=>{const gl=groups[region].slice().sort(lotDateDesc);const inn=gl.reduce((a,l)=>a+l.qty,0),used=gl.reduce((a,l)=>a+lotUsed(l),0),disp=gl.reduce((a,l)=>a+lotDisposed(l),0);groupsArr.push({mat:'fresh',region,gl,inn,used,rem:inn-used-disp,latest:gl[0]?gl[0].date:'',depleted:(inn-used-disp)<=0,types:[...new Set(gl.map(l=>l.type))]});});
     }
     if(mat==='all'||mat==='dry'){
       const alloc=dryAlloc();
@@ -463,9 +465,9 @@
       if(ui.typeFilter!=='전체')lots=lots.filter(l=>shortType(l.type)===ui.typeFilter);
       if(q)lots=lots.filter(l=>(l.region||'').includes(q)||l.type.includes(q));
       const groups={};lots.forEach(l=>{const r=l.region||'건조화분';(groups[r]=groups[r]||[]).push(l);});
-      Object.keys(groups).forEach(region=>{const gl=groups[region].slice().sort((a,b)=>a.date>b.date?-1:1);const inn=gl.reduce((a,l)=>a+l.qty,0),used=gl.reduce((a,l)=>a+dryLotUsed(l,alloc),0);groupsArr.push({mat:'dry',region,gl,inn,used,rem:inn-used,latest:gl[0]?gl[0].date:'',depleted:(inn-used)<=0,types:[...new Set(gl.map(l=>l.type))],alloc});});
+      Object.keys(groups).forEach(region=>{const gl=groups[region].slice().sort(lotDateDesc);const inn=gl.reduce((a,l)=>a+l.qty,0),used=gl.reduce((a,l)=>a+dryLotUsed(l,alloc),0);groupsArr.push({mat:'dry',region,gl,inn,used,rem:inn-used,latest:gl[0]?gl[0].date:'',depleted:(inn-used)<=0,types:[...new Set(gl.map(l=>l.type))],alloc});});
     }
-    groupsArr.sort((a,b)=>{if(a.depleted!==b.depleted)return a.depleted?1:-1;return a.latest>b.latest?-1:(a.latest<b.latest?1:0);});
+    groupsArr.sort((a,b)=>{if(a.depleted!==b.depleted)return a.depleted?1:-1;return a.latest>b.latest?-1:(a.latest<b.latest?1:((a.region||'')<(b.region||'')?-1:1));});
     html=groupsArr.map(g=>g.mat==='dry'?dryRegionGroupHTML(g,g.alloc):freshGroupHTML(g)).join('');
     if(!html){
       if(mat==='fresh')html='<div class="empty">표시할 생화분 재고가 없어요.</div>';
@@ -599,12 +601,17 @@
   function renderPickerList(){
     const wrap=document.getElementById('pick-list'); if(!wrap)return;
     const dry=pickKind==='dry';
-    let lots=dry?dryLots().slice():freshLots().filter(l=>lotRemain(l)>0);
+    const alloc=dry?dryAlloc():null;
+    let lots=dry?dryLots().filter(l=>dryLotRemain(l,alloc)>0):freshLots().filter(l=>lotRemain(l)>0);
     const q=batchSearchTxt.trim(); if(q)lots=lots.filter(l=>(l.region||'').includes(q)||l.type.includes(q));
-    lots.sort((a,b)=>a.date>b.date?-1:(a.date<b.date?1:((a.region||'')<(b.region||'')?-1:1)));
-    if(lots.length===0){wrap.innerHTML='<div class="pickempty">'+(q?'검색 결과가 없어요':(dry?'건조화분 입고가 없어요':'사용 가능한 생화분 입고가 없어요'))+'</div>';return;}
-    wrap.innerHTML=lots.map(l=>{const sel=l.id===(dry?selDryLot:selBatchLot);const right=dry?`입고 ${num(l.qty)}`:`${num(lotRemain(l))}`;
-      return `<div class="pickcard${sel?' sel':''}" onclick="POLLEN.choosePickLot('${l.id}')"><div class="pl"><div class="pname"><span class="tagdot ${dry?'dryt':'fresh'}">${dry?'건조':'생화분'}</span>${esc(l.region||'건조화분')}</div><div class="psub">${esc(shortType(l.type))} · ${fmtDate(l.date)} 입고</div></div><div class="pr"><div class="prem">${right}<span>kg</span></div><div class="pchk">${sel?'✓ 선택됨':'선택 ›'}</div></div></div>`;}).join('');
+    if(lots.length===0){wrap.innerHTML='<div class="pickempty">'+(q?'검색 결과가 없어요':(dry?'사용 가능한 건조화분 입고가 없어요':'사용 가능한 생화분 입고가 없어요'))+'</div>';return;}
+    // 재고표와 동일 순서: 입고처별 묶음 → 최근 입고 그룹 먼저, 그룹 내 날짜 내림차순(같은 날짜는 입력순)
+    const groups={};lots.forEach(l=>{const r=l.region||'건조화분';(groups[r]=groups[r]||[]).push(l);});
+    const regionArr=Object.keys(groups).map(r=>{const gl=groups[r].slice().sort(lotDateDesc);return{r,gl,latest:gl[0]?gl[0].date:''};});
+    regionArr.sort((a,b)=>a.latest>b.latest?-1:(a.latest<b.latest?1:(a.r<b.r?-1:1)));
+    const ordered=[];regionArr.forEach(g=>g.gl.forEach(l=>ordered.push(l)));
+    wrap.innerHTML=ordered.map(l=>{const sel=l.id===(dry?selDryLot:selBatchLot);const rem=dry?dryLotRemain(l,alloc):lotRemain(l);
+      return `<div class="pickcard${sel?' sel':''}" onclick="POLLEN.choosePickLot('${l.id}')"><div class="pl"><div class="pname"><span class="tagdot ${dry?'dryt':'fresh'}">${dry?'건조':'생화분'}</span>${esc(l.region||'건조화분')}</div><div class="psub">${esc(shortType(l.type))} · ${fmtDate(l.date)} 입고 ${num(l.qty)}kg</div></div><div class="pr"><div class="prem">${num(rem)}<span>kg</span></div><div class="pchk">${sel?'✓ 선택됨':'잔량 ›'}</div></div></div>`;}).join('');
   }
   /* ---------- 폐기 등록 (사용 탭, 배치 선택 방식) ---------- */
   let dKind='fresh', dispLot='';
