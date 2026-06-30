@@ -59,9 +59,9 @@
   .ministat{flex:1;min-width:0;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;border-left-width:4px;}
   .ministat.fresh{border-left-color:var(--honey);}
   .ministat.dry{border-left-color:#7A6433;}
-  .ministat .k{font-size:11px;color:var(--muted);font-weight:700;}
+  .ministat .k{font-size:12.5px;color:var(--muted);font-weight:700;}
   .ministat .v{font-size:17px;font-weight:800;letter-spacing:-.4px;margin-top:2px;}
-  .boxnote{text-align:center;font-size:11.5px;color:var(--muted);font-weight:700;margin-top:9px;}
+  .boxnote{text-align:center;font-size:13px;color:var(--muted);font-weight:700;margin-top:9px;}
   .seg.matseg{margin:8px 0 4px;}
   .seg.matseg button[data-mv="dry"].on{background:#EBDFC4;border-color:#9A8246;color:#5E4E2A;}
   .seg.matseg button[data-mv="fresh"].on{background:var(--honey-soft);border-color:var(--honey);color:var(--honey-deep);}
@@ -73,7 +73,7 @@
   .pickcard.sel{border-color:var(--honey);background:var(--honey-soft);box-shadow:0 0 0 3px rgba(217,138,31,.15);}
   .pickcard .pl{flex:1;min-width:0;}
   .pickcard .pname{font-size:15px;font-weight:800;letter-spacing:-.3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;gap:6px;}
-  .pickcard .psub{font-size:12px;color:var(--muted);font-weight:700;margin-top:3px;}
+  .pickcard .psub{font-size:13.5px;color:var(--muted);font-weight:700;margin-top:3px;}
   .pickcard .pr{flex:0 0 auto;text-align:right;}
   .pickcard .prem{font-size:18px;font-weight:800;letter-spacing:-.5px;color:var(--honey-deep);line-height:1;}
   .pickcard .prem span{font-size:10px;font-weight:800;color:var(--muted);margin-left:1px;}
@@ -89,7 +89,7 @@
   .strip::-webkit-scrollbar{display:none;}
   .pill{flex:0 0 auto;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px 13px;}
   .pill.alert{background:var(--red-soft);border-color:#e7c4be;}
-  .pill .pk{font-size:10.5px;color:var(--muted);font-weight:700;}
+  .pill .pk{font-size:12px;color:var(--muted);font-weight:700;}
   .pill.alert .pk{color:var(--red);}
   .pill .pv{font-size:15px;font-weight:800;letter-spacing:-.3px;margin-top:1px;}
   .pill.alert .pv{color:var(--red);}
@@ -100,8 +100,9 @@
   .section-h{font-size:12px;font-weight:800;color:var(--muted);margin:16px 4px 8px;}
 
   .filters{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 4px;}
-  .chip{border:1px solid var(--line);background:var(--card);color:var(--muted);font-size:12.5px;font-weight:700;padding:6px 13px;border-radius:999px;cursor:pointer;transition:.15s;}
+  .chip{border:1px solid var(--line);background:var(--card);color:var(--muted);font-size:13.5px;font-weight:700;padding:6px 13px;border-radius:999px;cursor:pointer;transition:.15s;}
   .chip.on{background:var(--ink);color:#fff;border-color:var(--ink);}
+  .yearfilters .chip.on{background:var(--mix);border-color:var(--mix);color:#fff;}
   .search{width:100%;margin:8px 0 2px;padding:11px 13px;border:1px solid var(--line);border-radius:12px;font-size:14.5px;background:var(--card);color:var(--ink);}
   .search::placeholder{color:#b9ad99;}
 
@@ -120,15 +121,15 @@
   .ghead{display:flex;align-items:center;gap:8px;padding:14px 14px;cursor:pointer;}
   .ghead .gl{flex:1;min-width:0;}
   .ghead .gname{font-size:16px;font-weight:800;letter-spacing:-.4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;gap:6px;}
-  .tagdot{font-size:10px;font-weight:800;padding:2px 7px;border-radius:999px;flex:0 0 auto;}
+  .tagdot{font-size:11.5px;font-weight:800;padding:2px 7px;border-radius:999px;flex:0 0 auto;}
   .tagdot.fresh{background:var(--honey-soft);color:var(--honey-deep);}
   .tagdot.dryt{background:var(--dry-soft);color:var(--dry-deep);}
-  .ghead .gtype{font-size:11.5px;color:var(--muted);font-weight:700;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .ghead .gtype{font-size:13px;color:var(--muted);font-weight:700;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
   .ghead .gr{flex:0 0 112px;text-align:right;}
   .ghead .grem{font-size:23px;font-weight:800;letter-spacing:-.7px;line-height:1;}
   .ghead .grem.neg{color:var(--red);}
   .ghead .grem .u{font-size:11px;font-weight:800;margin-left:2px;color:var(--muted);}
-  .ghead .gsub{font-size:11px;color:var(--muted);font-weight:700;margin-top:4px;}
+  .ghead .gsub{font-size:12.5px;color:var(--muted);font-weight:700;margin-top:4px;}
   .caret{flex:0 0 auto;transition:.2s;color:#c3b8a4;}
   .group.open .caret{transform:rotate(180deg);}
   .lots{display:none;border-top:1px solid var(--line-soft);padding:2px 14px 8px;background:#FDFBF6;}
@@ -137,14 +138,14 @@
   .lot:last-child{border-bottom:none;}
   .lot .ltop{display:flex;justify-content:space-between;align-items:baseline;gap:8px;}
   .lot .ldate{font-size:14.5px;font-weight:800;letter-spacing:-.3px;}
-  .lstat{font-size:11px;font-weight:800;padding:3px 9px;border-radius:999px;flex:0 0 auto;}
+  .lstat{font-size:12.5px;font-weight:800;padding:3px 9px;border-radius:999px;flex:0 0 auto;}
   .st-full{background:var(--leaf-soft);color:var(--leaf);}
   .st-low{background:var(--amber-soft);color:var(--amber);}
   .st-zero{background:var(--red-soft);color:var(--red);}
-  .lot .lnums{display:flex;margin-top:7px;font-size:12.5px;color:var(--muted);}
+  .lot .lnums{display:flex;margin-top:7px;font-size:13.5px;color:var(--muted);}
   .lot .lnums>span{flex:1;}
   .lot .lnums>span:last-child{flex:0 0 96px;text-align:right;}
-  .lot .lnums b{color:var(--ink);font-weight:800;font-size:13.5px;}
+  .lot .lnums b{color:var(--ink);font-weight:800;font-size:14.5px;}
   .lot .lnums .rem b{color:var(--honey-deep);}
   .lot .lnums .disp b{color:#9a3b2f;}
   .bar{height:7px;border-radius:999px;background:var(--line);margin-top:9px;overflow:hidden;}
@@ -195,7 +196,7 @@
 
   /* 이력 */
   .datehead{font-size:16.5px;font-weight:800;letter-spacing:-.4px;margin:18px 4px 9px;display:flex;align-items:baseline;gap:7px;}
-  .datehead .wd{font-size:12.5px;font-weight:800;color:var(--muted);}
+  .datehead .wd{font-size:13.5px;font-weight:800;color:var(--muted);}
   .hitem{display:flex;align-items:flex-start;gap:11px;background:var(--card);border:1px solid var(--line);border-left:5px solid var(--line);border-radius:14px;padding:12px 13px;margin-bottom:8px;}
   .hitem.in{border-left-color:var(--honey);}
   .hitem.dryin{border-left-color:var(--dry);}
@@ -209,12 +210,21 @@
   .htag.out{background:var(--leaf-soft);color:var(--leaf);}
   .htag.disp{background:#f3dcd7;color:#9a3b2f;}
   .hbody{flex:1;min-width:0;}
-  .hbody .h1{font-size:14.5px;font-weight:800;letter-spacing:-.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-  .hbody .h2{font-size:12.5px;color:var(--muted);margin-top:3px;font-weight:700;}
-  .hbody .h3{font-size:12.5px;margin-top:5px;font-weight:800;}
+  .hbody .h1{font-size:16px;font-weight:800;letter-spacing:-.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .hbody .h2{font-size:13.5px;color:var(--muted);margin-top:4px;font-weight:700;}
+  .hbody .h-src{font-size:14.5px;margin-top:5px;font-weight:700;color:#7a6f60;line-height:1.4;}
+  .hbody .h-src .rsrc{color:var(--mix-deep);font-weight:800;}
+  .hbody .h-mix{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px;}
+  .hbody .h-mix .mb{font-size:13px;font-weight:800;padding:3px 9px;border-radius:8px;white-space:nowrap;}
+  .hbody .h-mix .mb.fresh{background:var(--honey-soft);color:var(--honey-deep);}
+  .hbody .h-mix .mb.dry{background:var(--dry-soft);color:var(--dry-deep);}
+  .hbody .h-mix .mb.ratio{background:var(--mix-soft);color:var(--mix-deep);}
+  .hbody .h-memo{font-size:13.5px;margin-top:6px;font-weight:600;color:#6b6256;border-left:3px solid var(--line);padding:2px 0 2px 9px;line-height:1.45;}
+  .hbody .h3{font-size:14px;margin-top:6px;font-weight:800;}
   .res-양호{color:var(--leaf);} .res-보통{color:var(--amber);} .res-불량{color:var(--red);} .res-관찰중{color:var(--clay);}
   .rbtn{display:inline-block;margin-top:7px;border:1px solid var(--leaf);background:var(--leaf-soft);color:var(--leaf-deep);font-size:12px;font-weight:800;padding:6px 12px;border-radius:9px;cursor:pointer;}
   .rbtn.due{border-color:var(--red);background:var(--red-soft);color:var(--red);}
+  .rbtn.muted{border-color:var(--line);background:#ececec;color:var(--muted);cursor:default;}
   .hright{flex:0 0 auto;display:flex;flex-direction:column;align-items:flex-end;gap:6px;}
   .hqty{font-size:14.5px;font-weight:800;letter-spacing:-.3px;}
   .hqty.in{color:var(--honey-deep);} .hqty.dryin{color:var(--dry-deep);} .hqty.out{color:var(--leaf);} .hqty.disp{color:#9a3b2f;}
@@ -277,7 +287,7 @@
   let state={lots:[],batches:[],disposals:[]};
   let auth={h:null,v:2};
   let isAdmin=false;
-  let ui={tab:'inv',matView:'all',typeFilter:'전체',search:'',openRegions:{},histFilter:'전체',showOld:false,
+  let ui={tab:'inv',matView:'all',typeFilter:'전체',search:'',openRegions:{},histFilter:'전체',histYear:'전체',usedYear:'전체',showOld:false,
           inboundKind:'fresh',inboundUnit:'kg',ratioMode:'dry',edit:null,modalResult:''};
 
   const DKEY='pollen_data_v3', AKEY='pollen_auth_v3', SKEY='pollen_session_v3';
@@ -339,12 +349,27 @@
   function render(){renderHeader();renderInventory();renderHistory();}
   function renderHeader(){
     const f=freshTotals(),d=dryTotals(),bs=batchStats();
-    document.getElementById('h-fresh').textContent=num(f.rem);
-    document.getElementById('h-freshbox').textContent='약 '+boxes(f.rem)+'박스';
-    document.getElementById('h-fresh-used').textContent=num(f.used)+' kg';
-    document.getElementById('h-dry').textContent=num(d.rem);
-    document.getElementById('h-drybox').textContent=d.inn>0?('약 '+boxes(d.rem)+'박스'):'입고 미등록';
-    document.getElementById('h-dry-used').textContent=num(d.used)+' kg';
+    const fRem=Math.max(0,f.rem),dRem=Math.max(0,d.rem);
+    document.getElementById('h-fresh').textContent=num(fRem);
+    document.getElementById('h-freshbox').textContent='약 '+boxes(fRem)+'박스';
+    document.getElementById('h-dry').textContent=num(dRem);
+    document.getElementById('h-drybox').textContent=d.inn>0?('약 '+boxes(dRem)+'박스'):'입고 미등록';
+    // 사용 누적 (선택 연도)
+    const yr=ui.usedYear||'전체';
+    const inYr=b=>yr==='전체'||(b.date||'').slice(0,4)===yr;
+    const fUsedY=state.batches.filter(inYr).reduce((a,b)=>a+b.freshQty,0);
+    const dUsedY=state.batches.filter(inYr).reduce((a,b)=>a+(b.dryQty||0),0);
+    const ylab=yr==='전체'?'':` (${yr})`;
+    const fl=document.getElementById('h-fresh-used-k'); if(fl)fl.textContent='생화분 사용 누적'+ylab;
+    const dl2=document.getElementById('h-dry-used-k'); if(dl2)dl2.textContent='건조화분 사용 누적'+ylab;
+    document.getElementById('h-fresh-used').textContent=num(fUsedY)+' kg';
+    document.getElementById('h-dry-used').textContent=num(dUsedY)+' kg';
+    // 사용 누적 연도 칩
+    const years=[...new Set(state.batches.map(b=>(b.date||'').slice(0,4)).filter(Boolean))].sort((a,b)=>b<a?-1:1);
+    if(years.indexOf(yr)<0&&yr!=='전체')ui.usedYear='전체';
+    const yc=document.getElementById('used-year');
+    if(yc)yc.innerHTML=['전체',...years].map(y=>`<button class="chip${(ui.usedYear||'전체')===y?' on':''}" onclick="POLLEN.setUsedYear('${y}',this)">${y==='전체'?'전체':y+'년'}</button>`).join('');
+    document.getElementById('h-dry-used').textContent=num(dUsedY)+' kg';
     let pills='';
     if(bs.due>0)pills+=`<div class="pill alert"><div class="pk">결과 기록 권장</div><div class="pv">${bs.due}건</div></div>`;
     pills+=`<div class="pill"><div class="pk">결과 미입력</div><div class="pv">${bs.pending}건</div></div>`+
@@ -352,7 +377,7 @@
       `<div class="pill"><div class="pk">누적 사용량(배합)</div><div class="pv">${num(bs.dough)} kg</div></div>`+
       `<div class="pill"><div class="pk">산란실 사용</div><div class="pv">${bs.by['산란실']||0}회</div></div>`+
       `<div class="pill"><div class="pk">사육실 사용</div><div class="pv">${bs.by['사육실']||0}회</div></div>`;
-    document.getElementById('strip').innerHTML=pills;
+    const strip=document.getElementById('strip');if(strip){strip.style.display='flex';strip.innerHTML=pills;}
   }
   function statusOf(lot){const rem=lotRemain(lot);if(rem<=0)return{cls:'st-zero',txt:'사용완료',bar:'b-zero'};if(rem/lot.qty<=0.25)return{cls:'st-low',txt:'잔량 적음',bar:''};return{cls:'st-full',txt:'보유중',bar:''};}
   function lotLastUse(lot){const ds=state.batches.filter(b=>b.freshLotId===lot.id).map(b=>b.date).sort();return ds.length?ds[ds.length-1]:'';}
@@ -416,10 +441,16 @@
     state.lots.forEach(l=>items.push({sort:l.date+'~'+l.id,date:l.date,kind:l.kind==='dry'?'dryin':'in',rec:l}));
     state.batches.forEach(b=>items.push({sort:b.date+'~'+b.id,date:b.date,kind:'out',rec:b}));
     (state.disposals||[]).forEach(x=>items.push({sort:x.date+'~'+x.id,date:x.date,kind:'disp',rec:x}));
+    // 연도 칩 구성 (전체 / 최근연도 → 지난 연도)
+    const years=[...new Set(items.map(i=>(i.date||'').slice(0,4)).filter(Boolean))].sort((a,b)=>b<a?-1:1);
+    if(years.indexOf(ui.histYear)<0&&ui.histYear!=='전체')ui.histYear='전체';
+    const yc=document.getElementById('hist-years');
+    if(yc)yc.innerHTML=['전체',...years].map(y=>`<button class="chip${ui.histYear===y?' on':''}" onclick="POLLEN.setYear('${y}',this)">${y==='전체'?'전체':y+'년'}</button>`).join('');
     let list=items;
     if(ui.histFilter==='입고')list=items.filter(i=>i.kind==='in'||i.kind==='dryin');
     else if(ui.histFilter==='사용')list=items.filter(i=>i.kind==='out');
     else if(ui.histFilter==='폐기')list=items.filter(i=>i.kind==='disp');
+    if(ui.histYear!=='전체')list=list.filter(i=>(i.date||'').slice(0,4)===ui.histYear);
     list=list.slice().sort((a,b)=>a.sort<b.sort?1:(a.sort>b.sort?-1:0));
     if(list.length===0){wrap.innerHTML='<div class="empty">기록이 없어요.</div>';return;}
     let html='',curDate='';
@@ -431,14 +462,19 @@
         let resLine;
         if(b.result)resLine=`<div class="h3 res-${b.result}">결과: ${b.result}${b.resultDate?` (${fmtDate(b.resultDate)})`:''}${b.resultNote?` · ${esc(b.resultNote)}`:''}</div>`;
         else if(isAdmin)resLine=`<div class="rbtn${overdue?' due':''}" onclick="event.stopPropagation();POLLEN.openEdit('batch','${b.id}')">${overdue?`결과 기록 권장 (사용 ${daysSince(b.date)}일 경과)`:'결과 입력'}</div>`;
-        else resLine=`<div class="h3" style="color:var(--muted)">결과 ${overdue?'기록 권장':'미입력'}</div>`;
-        html+=`<div class="hitem out${overdue?' overdue':''}${isAdmin?' tap':''}"${isAdmin?` onclick="POLLEN.openEdit('batch','${b.id}')"`:''}><div class="htag out">${esc((b.place||'미지정').slice(0,2))}<br>사용</div><div class="hbody"><div class="h1">${esc(b.place||'미지정')} 사용</div><div class="h2">${esc(srcTxt)} · 생화분 ${num(b.freshQty)} + 건조 ${num(b.dryQty||0)} (${ratio})${b.note?` · ${esc(b.note)}`:''}</div>${resLine}</div><div class="hright"><div class="hqty out">${num(b.freshQty+(b.dryQty||0))}kg</div>${isAdmin?`<button class="hdel" onclick="event.stopPropagation();POLLEN.del('batch','${b.id}')">×</button>`:''}</div></div>`;
+        else resLine=`<div class="rbtn muted">결과 미입력</div>`;
+        const mb=[];if(b.freshQty>0)mb.push(`<span class="mb fresh">생화분 ${num(b.freshQty)}kg</span>`);if((b.dryQty||0)>0)mb.push(`<span class="mb dry">건조 ${num(b.dryQty||0)}kg</span>`);mb.push(`<span class="mb ratio">비율 ${ratio}</span>`);
+        const srcLine=`<div class="h-src">출처: <span class="rsrc">${esc(srcTxt)}</span></div><div class="h-mix">${mb.join('')}</div>`;
+        const memoLine=b.note?`<div class="h-memo">📝 ${esc(b.note)}</div>`:'';
+        html+=`<div class="hitem out${overdue?' overdue':''}${isAdmin?' tap':''}"${isAdmin?` onclick="POLLEN.openEdit('batch','${b.id}')"`:''}><div class="htag out">${esc((b.place||'미지정').slice(0,2))}<br>사용</div><div class="hbody"><div class="h1">${esc(b.place||'미지정')} 사용</div>${srcLine}${memoLine}${resLine}</div><div class="hright"><div class="hqty out">${num(b.freshQty+(b.dryQty||0))}kg</div>${isAdmin?`<button class="hdel" onclick="event.stopPropagation();POLLEN.del('batch','${b.id}')">×</button>`:''}</div></div>`;
       }else if(it.kind==='disp'){
         const x=it.rec;const fresh=x.kind==='fresh';const lot=fresh?(state.lots.find(l=>l.id===x.freshLotId)||{}):null;
-        html+=`<div class="hitem disp${isAdmin?' tap':''}"${isAdmin?` onclick="POLLEN.del('disposal','${x.id}')"`:''}><div class="htag disp">폐기</div><div class="hbody"><div class="h1">${fresh?'생화분 폐기':'건조화분 폐기'}${fresh&&lot&&lot.region?` · ${esc(lot.region)}`:''}</div><div class="h2">${esc(x.reason||'')}${fresh&&lot?` · ${esc(shortType(lot.type||''))}`:''}${x.note?` · ${esc(x.note)}`:''}</div></div><div class="hright"><div class="hqty disp">-${num(x.qty)}kg</div>${isAdmin?`<button class="hdel" onclick="event.stopPropagation();POLLEN.del('disposal','${x.id}')">×</button>`:''}</div></div>`;
+        const memoLine=x.note?`<div class="h-memo">📝 ${esc(x.note)}</div>`:'';
+        html+=`<div class="hitem disp${isAdmin?' tap':''}"${isAdmin?` onclick="POLLEN.del('disposal','${x.id}')"`:''}><div class="htag disp">폐기</div><div class="hbody"><div class="h1">${fresh?'생화분 폐기':'건조화분 폐기'}${fresh&&lot&&lot.region?` · ${esc(lot.region)}`:''}</div><div class="h2">사유: ${esc(x.reason||'-')}${fresh&&lot?` · ${esc(shortType(lot.type||''))}`:''}</div>${memoLine}</div><div class="hright"><div class="hqty disp">-${num(x.qty)}kg</div>${isAdmin?`<button class="hdel" onclick="event.stopPropagation();POLLEN.del('disposal','${x.id}')">×</button>`:''}</div></div>`;
       }else{
         const l=it.rec;const dry=it.kind==='dryin';
-        html+=`<div class="hitem ${dry?'dryin':'in'}${isAdmin?' tap':''}"${isAdmin?` onclick="POLLEN.openEdit('lot','${l.id}')"`:''}><div class="htag ${dry?'dryin':'in'}">${dry?'건조<br>입고':'생화분<br>입고'}</div><div class="hbody"><div class="h1">${dry?'건조화분 입고':'생화분 입고'} · ${esc(l.region||(dry?'건조화분':''))}</div><div class="h2">${esc(shortType(l.type))} · 입고 ${num(l.qty)}kg${l.note?` · ${esc(l.note)}`:''}</div></div><div class="hright"><div class="hqty ${dry?'dryin':'in'}">+${num(l.qty)}kg</div>${isAdmin?`<button class="hdel" onclick="event.stopPropagation();POLLEN.del('lot','${l.id}')">×</button>`:''}</div></div>`;
+        const memoLine=l.note?`<div class="h-memo">📝 ${esc(l.note)}</div>`:'';
+        html+=`<div class="hitem ${dry?'dryin':'in'}${isAdmin?' tap':''}"${isAdmin?` onclick="POLLEN.openEdit('lot','${l.id}')"`:''}><div class="htag ${dry?'dryin':'in'}">${dry?'건조<br>입고':'생화분<br>입고'}</div><div class="hbody"><div class="h1">${dry?'건조화분 입고':'생화분 입고'} · ${esc(l.region||(dry?'건조화분':''))}</div><div class="h2">${esc(shortType(l.type))} · 입고 ${num(l.qty)}kg</div>${memoLine}</div><div class="hright"><div class="hqty ${dry?'dryin':'in'}">+${num(l.qty)}kg</div>${isAdmin?`<button class="hdel" onclick="event.stopPropagation();POLLEN.del('lot','${l.id}')">×</button>`:''}</div></div>`;
       }
     });
     wrap.innerHTML=html;
@@ -614,11 +650,11 @@
     <div class="hint">새 비밀번호는 모든 직원 기기에 함께 적용됩니다.</div>
     <div class="mbtns"><button class="cancel" onclick="POLLEN.closeSheet()">취소</button><button class="save" onclick="POLLEN.saveSettings()">저장</button></div>`);}
 
-  /* ---------- 내보내기 (보고서형) ---------- */
+  /* ---------- 내보내기 ---------- */
   async function exportData(){
-    const name='화분관리보고서_'+todayISO().replace(/-/g,'');
+    const name='화분관리_'+todayISO().replace(/-/g,'');
     try{
-      if(window.ExcelJS){await buildReport(name+'.xlsx');toast('엑셀 보고서를 내보냈어요');return;}
+      if(window.ExcelJS){await buildReport(name+'.xlsx');toast('엑셀을 내보냈어요');return;}
     }catch(e){console.error(e);}
     exportCSV(name+'.csv');toast('CSV로 내보냈어요 (엑셀에서 열기 가능)');
   }
@@ -633,8 +669,8 @@
     function body(ws,r,n,opts){opts=opts||{};for(let i=1;i<=n;i++){const c=ws.getRow(r).getCell(i);c.border=bd;c.font={size:11,name:'맑은 고딕',bold:!!opts.bold};c.alignment={vertical:'middle',horizontal:opts.align&&opts.align[i-1]||'left'};if(opts.num&&opts.num.indexOf(i)>=0)c.numFmt='#,##0.0';if(opts.fill)c.fill={type:'pattern',pattern:'solid',fgColor:{argb:opts.fill}};}}
 
     // 요약 시트
-    const s=wb.addWorksheet('보고서 요약');s.columns=[{width:22},{width:16},{width:16},{width:16}];
-    title(s,1,'🌸 화분관리현황 보고서',4,18);
+    const s=wb.addWorksheet('요약');s.columns=[{width:22},{width:16},{width:16},{width:16}];
+    title(s,1,'🌸 화분관리현황',4,18);
     s.mergeCells(2,1,2,4);const sub=s.getCell(2,1);sub.value='생성일: '+new Date().toLocaleString('ko-KR');sub.font={italic:true,size:10,color:{argb:MUT},name:'맑은 고딕'};
     let r=4;title(s,r,'■ 재고 요약 (kg)',4);r++;
     s.getRow(r).values=['구분','입고','사용','폐기','잔량'];header(s,r,5);r++;
@@ -678,7 +714,7 @@
     const wb2=wb.addWorksheet('사용·먹이 기록');wb2.columns=[{width:13},{width:22},{width:11},{width:11},{width:11},{width:11},{width:11},{width:9},{width:13},{width:24}];
     title(wb2,1,'배합 · 먹이 사용 기록',10,14);
     wb2.getRow(3).values=['사용일자','생화분 출처','배합(생/건)','생화분(kg)','건조(kg)','총배합량(kg)','사용처','결과','결과기록일','메모'];header(wb2,3,10);
-    let br=4;state.batches.slice().sort((a,b)=>a.date<b.date?1:-1).forEach(b=>{const lot=state.lots.find(x=>x.id===b.freshLotId)||{};const note=[b.note,b.resultNote].filter(Boolean).join(' / ');wb2.getRow(br).values=[fmtDate(b.date),(lot.region||'(삭제)')+' '+fmtDate(lot.date),`${b.ratioFresh}/${100-b.ratioFresh}`,b.freshQty,b.dryQty||0,b.freshQty+(b.dryQty||0),b.place||'',b.result||'미입력',b.resultDate?fmtDate(b.resultDate):'',note];body(wb2,br,10,{num:[4,5,6],align:['center','left','center','right','right','right','center','center','center','left']});br++;});
+    let br=4;state.batches.slice().sort((a,b)=>a.date<b.date?1:-1).forEach(b=>{const dryOnly=!(b.freshQty>0);const srcLot=state.lots.find(x=>x.id===(dryOnly?b.dryLotId:b.freshLotId))||{};const srcCell=srcLot.region?(srcLot.region+' '+fmtDate(srcLot.date||'')):(dryOnly?'건조화분 소분/공급':'(삭제)');const note=[b.note,b.resultNote].filter(Boolean).join(' / ');wb2.getRow(br).values=[fmtDate(b.date),srcCell,`${num(b.ratioFresh)}/${num(100-b.ratioFresh)}`,b.freshQty,b.dryQty||0,b.freshQty+(b.dryQty||0),b.place||'',b.result||'미입력',b.resultDate?fmtDate(b.resultDate):'',note];body(wb2,br,10,{num:[4,5,6],align:['center','left','center','right','right','right','center','center','center','left']});br++;});
     wb2.views=[{state:'frozen',ySplit:3,showGridLines:false}];
 
     const buf=await wb.xlsx.writeBuffer();
@@ -690,8 +726,9 @@
     const sec=(t,rows)=>['# '+t].concat(rows.map(r=>r.map(esc2).join(','))).join('\n');
     const fr=[['입고일자','지역(대표)','화분종류','입고(kg)','사용(kg)','잔량(kg)','비고']];freshLots().forEach(l=>fr.push([fmtDate(l.date),l.region,l.type,l.qty,lotUsed(l),lotRemain(l),l.note||'']));fr.push(['합계','','',f.inn,f.used,f.rem,'']);
     const dr=[['입고일자','구입처/지역','종류','입고(kg)','비고']];dryLots().forEach(l=>dr.push([fmtDate(l.date),l.region||'',l.type,l.qty,l.note||'']));
-    const bn=[['사용일자','생화분 출처','배합(생/건)','생화분(kg)','건조(kg)','총배합량(kg)','사용처','결과','결과기록일','메모']];state.batches.forEach(b=>{const lot=state.lots.find(x=>x.id===b.freshLotId)||{};bn.push([fmtDate(b.date),(lot.region||'')+' '+fmtDate(lot.date),`${b.ratioFresh}/${100-b.ratioFresh}`,b.freshQty,b.dryQty||0,b.freshQty+(b.dryQty||0),b.place||'',b.result||'미입력',b.resultDate?fmtDate(b.resultDate):'',[b.note,b.resultNote].filter(Boolean).join(' / ')]);});
-    const csv='\uFEFF'+[sec('생화분',fr),sec('건조화분',dr),sec('사용기록',bn)].join('\n\n');
+    const bn=[['사용일자','생화분 출처','배합(생/건)','생화분(kg)','건조(kg)','총배합량(kg)','사용처','결과','결과기록일','메모']];state.batches.forEach(b=>{const dryOnly=!(b.freshQty>0);const srcLot=state.lots.find(x=>x.id===(dryOnly?b.dryLotId:b.freshLotId))||{};const srcCell=srcLot.region?(srcLot.region+' '+fmtDate(srcLot.date||'')):(dryOnly?'건조화분 소분/공급':'');bn.push([fmtDate(b.date),srcCell,`${num(b.ratioFresh)}/${num(100-b.ratioFresh)}`,b.freshQty,b.dryQty||0,b.freshQty+(b.dryQty||0),b.place||'',b.result||'미입력',b.resultDate?fmtDate(b.resultDate):'',[b.note,b.resultNote].filter(Boolean).join(' / ')]);});
+    const dp=[['폐기일자','구분','출처/지역','사유','폐기(kg)','메모']];(state.disposals||[]).forEach(x=>{const lot=x.kind==='fresh'?(state.lots.find(l=>l.id===x.freshLotId)||{}):{};dp.push([fmtDate(x.date),x.kind==='fresh'?'생화분':'건조화분',x.kind==='fresh'?(lot.region||''):'',x.reason||'',x.qty,x.note||'']);});
+    const csv='\uFEFF'+[sec('생화분',fr),sec('건조화분',dr),sec('사용기록',bn),sec('폐기',dp)].join('\n\n');
     dl(new Blob([csv],{type:'text/csv'}),name);
   }
 
@@ -739,6 +776,8 @@
     toggleOld(el){ui.showOld=!ui.showOld;el.classList.toggle('on',ui.showOld);el.textContent=ui.showOld?'완료 1년+ 표시 중':'완료 1년+ 숨김 중';renderInventory();},
     onSearch(v){ui.search=v;renderInventory();},
     setHist(t,el){ui.histFilter=t;document.querySelectorAll('#hist-filters .chip').forEach(c=>c.classList.remove('on'));el.classList.add('on');renderHistory();},
+    setYear(y,el){ui.histYear=y;document.querySelectorAll('#hist-years .chip').forEach(c=>c.classList.remove('on'));if(el)el.classList.add('on');renderHistory();},
+    setUsedYear(y,el){ui.usedYear=y;renderHeader();},
     setKind(k){ui.inboundKind=k;document.querySelectorAll('#kind-seg button').forEach(b=>b.classList.toggle('on',b.dataset.k===k));document.getElementById('in-type').value=k==='fresh'?'생화분(도토리)':'건조화분(유채)';document.getElementById('in-region-label').textContent=k==='fresh'?'지역(대표)':'구입처/지역 (선택)';},
     setUnit(u){ui.inboundUnit=u;document.querySelectorAll('#unit-seg button').forEach(b=>b.classList.toggle('on',b.dataset.u===u));document.getElementById('in-qtylabel').textContent=u==='kg'?'입고량 (kg)':'입고량 (박스 · 1박스=20kg)';},
     openPicker(){const dryOnly=ratioFreshVal()===0;if(dryOnly)openPicker(function(id){selDryLot=id;updateSourceBtn();recalc();},'건조화분 출처 선택 (선택)','dry');else openPicker(function(id){selBatchLot=id;updateSourceBtn();recalc();},'생화분 출처 선택','fresh');},
@@ -882,9 +921,10 @@
           </div>
         </div>
         <div class="row2">
-          <div class="ministat fresh"><div class="k">생화분 사용 누적</div><div class="v" id="h-fresh-used">0 kg</div></div>
-          <div class="ministat dry"><div class="k">건조화분 사용 누적</div><div class="v" id="h-dry-used">0 kg</div></div>
+          <div class="ministat fresh"><div class="k" id="h-fresh-used-k">생화분 사용 누적</div><div class="v" id="h-fresh-used">0 kg</div></div>
+          <div class="ministat dry"><div class="k" id="h-dry-used-k">건조화분 사용 누적</div><div class="v" id="h-dry-used">0 kg</div></div>
         </div>
+        <div class="filters yearfilters" id="used-year" style="margin:8px 0 2px;"></div>
         <div class="boxnote">📦 1박스 = 20kg 기준</div>
       </div>
       </div>
@@ -955,8 +995,9 @@
       </div>
 
       <div class="panel" id="panel-hist">
-        <button class="exportbtn" onclick="POLLEN.export()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M4 21h16"/></svg>엑셀 보고서 내보내기</button>
+        <button class="exportbtn" onclick="POLLEN.export()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M4 21h16"/></svg>엑셀 내보내기</button>
         <div class="filters" id="hist-filters" style="margin-top:10px;"><button class="chip on" onclick="POLLEN.setHist('전체',this)">전체</button><button class="chip" onclick="POLLEN.setHist('입고',this)">입고</button><button class="chip" onclick="POLLEN.setHist('사용',this)">사용</button><button class="chip" onclick="POLLEN.setHist('폐기',this)">폐기</button></div>
+        <div class="filters yearfilters" id="hist-years" style="margin-top:8px;"></div>
         <div id="hist-list"></div>
         <div id="admin-tools" style="display:none;"><div class="adminbar"><button onclick="POLLEN.settings()">비밀번호 변경</button><button onclick="POLLEN.reset()">기본 데이터로 초기화</button></div></div>
       </div>
